@@ -14,9 +14,12 @@ Your "score" is simply how long your word was.
 
 Ex:
 [T, I, Y, I, D, R, P, L, I]
-My answer was "TRIP" a 4.
-After answering, I would see that other answers included: dirtily (7), tidily(6), triply(6), etc.
-And I would see that x% of users answered TRIP, where my score placed on average today, etc.
+
+User's answer is "TRIP" a 4.
+
+After answering, User would see that other answers included: dirtily (7), tidily(6), triply(6), etc.
+
+And User would see that x% of users answered TRIP, where User's score placed on average today, etc.
 
 # Numbers:
 
