@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  resources :number_results
+  resources :letter_results
+  resources :number_games
+  resources :letter_games
+  resources :users
+  resources :number_sets
+  resources :letter_sets
   namespace :api do
     resources :recipes, only: [:index, :create]
     post "/signup", to: "users#create"

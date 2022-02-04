@@ -1,0 +1,2 @@
+class LetterGamesController < ApplicationController
+end

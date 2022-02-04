@@ -1,0 +1,2 @@
+class LetterResultsController < ApplicationController
+end

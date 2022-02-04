@@ -1,0 +1,2 @@
+class NumberSetsController < ApplicationController
+end
