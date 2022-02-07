@@ -2,11 +2,37 @@ require 'pry'
 
 def spawnNumberSet()
   bigs = [100, 75, 50, 25]
-  smalls = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-  big_options = [0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4]
+  smalls = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  big_options = [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+  ]
   set = []
-
-  #   solution = []
   number_of_bigs = big_options.sample(1)[0]
   number_of_smalls = (6 - number_of_bigs)
   bcounter = 1
@@ -24,51 +50,248 @@ def spawnNumberSet()
   return set
 end
 
-def create_target(set)
-  operands = %w[+ - * /]
-  requirements = [3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6]
-  steps = requirements.sample(1)[0]
+s1 = spawnNumberSet
+
+# set of numbers
+# grab one as first number
+# from there: either grab one and an operand, then perform that operation on our living total
+# OR, grab two, operand them, then use their result on our living total
+# go until array is empty
+
+def smart_create_target(set)
+  operands = %w[+ + - - * * * / / /]
+  steps_required = [3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6]
+  steps = steps_required.sample(1)[0]
   working_numbers = set.sample(steps)
-  pp(working_numbers)
   solution = []
-  scounter = 1
+  operating_on = [1, 1, 1, 2, 2]
+  previous_operand = ''
   total = working_numbers.slice!(0, 1)[0]
-  working_numbers.each_with_index do |given_number, index|
+  pp(set)
+  while working_numbers.length > 0
     operand = operands.sample(1)[0]
-    if operand == '+'
-      solution.push("#{total} + #{given_number} = #{total + given_number}")
-      total = total + given_number
-    elsif operand == '-'
-      if total > given_number
-        solution.push("#{total} - #{given_number} = #{total - given_number}")
-        total = total - given_number
-      else
-        working_numbers.insert(index + 1, given_number)
-        next
+    if operating_on.sample(1)[0] == 1
+      given_number = working_numbers.sample(1)[0]
+      given_index = working_numbers.index(given_number)
+      if operand == '+'
+        solution.push("#{total} + #{given_number} = #{total + given_number}")
+        total = total + given_number
+        working_numbers.delete_at(given_index)
+      elsif operand == '-'
+        if total > given_number
+          solution.push("#{total} - #{given_number} = #{total - given_number}")
+          total = total - given_number
+          working_numbers.delete_at(given_index)
+        else
+          next
+        end
+      elsif operand == '*'
+        if (given_number != 1)
+          solution.push("#{total} * #{given_number} =  #{total * given_number}")
+          total = total * given_number
+          working_numbers.delete_at(given_index)
+        else
+          next
+        end
+      elsif operand == '/'
+        if (total % given_number == 0 && given_number != 1)
+          solution.push("#{total} / #{given_number} = #{total / given_number}")
+          total = total / given_number
+          working_numbers.delete_at(given_index)
+        else
+          next
+        end
       end
-    elsif operand == '*'
-      solution.push("#{total} * #{given_number} =  #{total * given_number}")
-      total = total * given_number
-    elsif operand == '/'
-      if total % given_number == 0 && given_number!==1
-        solution.push("#{total} / #{given_number} = #{total / given_number}")
-        total = total / given_number
+    elsif (operating_on.sample(1)[0] == 2)
+      if working_numbers.length >= 2
+        two_nums = working_numbers.sample(2)
+        index_one = working_numbers.index(two_nums[0])
+        index_two = working_numbers.index(two_nums[1])
+        if operand == '+'
+          sum = two_nums[0] + two_nums[1]
+          solution.push("#{two_nums[0]} + #{two_nums[1]} = #{sum}")
+          working_numbers.delete_at(index_one)
+          working_numbers.delete_at(index_two)
+          working_numbers.push(sum)
+        elsif operand == '-'
+          if two_nums[0] > two_nums[1]
+            difference = two_nums[0] - two_nums[1]
+            working_numbers.delete_at(index_one)
+            working_numbers.delete_at(index_two)
+            working_numbers.push(difference)
+            solution.push("#{two_nums[0]} - #{two_nums[1]} = #{difference}")
+          elsif two_nums[1] > two_nums[0]
+            difference = two_nums[1] - two_nums[0]
+            working_numbers.delete_at(index_one)
+            working_numbers.delete_at(index_two)
+            working_numbers.push(difference)
+            solution.push("#{two_nums[1]} - #{two_nums[0]} = #{difference}")
+          elsif two_nums[1] == two_nums[0]
+            next
+          end
+        elsif operand == '*'
+          if (two_nums[1] != 1 && two_nums[0] != 1)
+            product = two_nums[0] * two_nums[1]
+            working_numbers.delete_at(index_one)
+            working_numbers.delete_at(index_two)
+            working_numbers.push(product)
+            solution.push("#{two_nums[0]} * #{two_nums[1]} = #{product}")
+          else
+            next
+          end
+        elsif operand == '/'
+          if (two_nums[0] % two_nums[1] == 0 && two_nums[1] != 1)
+            quotient = two_nums[0] / two_nums[1]
+            working_numbers.delete_at(index_one)
+            working_numbers.delete_at(index_two)
+            working_numbers.push(quotient)
+            solution.push("#{two_nums[0]} / #{two_nums[1]} = #{quotient}")
+          elsif (two_nums[1] % two_nums[0] == 0 && two_nums[0] != 1)
+            quotient = two_nums[1] / two_nums[0]
+            working_numbers.delete_at(index_one)
+            working_numbers.delete_at(index_two)
+            working_numbers.push(quotient)
+            solution.push("#{two_nums[1]} / #{two_nums[0]} = #{quotient}")
+          else
+            next
+          end
+        end
       else
-        working_numbers.insert(index + 1, given_number)
         next
       end
     end
   end
   if total >= 100 && total <= 999
-    pp(solution)
     pp(total)
+    pp(solution)
     return solution, total
   else
-    create_target(set)
+    smart_create_target(set)
   end
 end
 
-s1 = spawnNumberSet
-pp(s1)
+smart_create_target(s1)
 
-create_target(s1)
+def grab_contents(file)
+  opened_file = File.open(file)
+  file_contents = opened_file.readlines.map(&:chomp)
+  opened_file.close
+  return file_contents
+end
+
+# pp(grab_contents('./o_e_d.txt'))
+
+def grab_first_word(file)
+  dictionary = grab_contents('./o_e_d.txt')
+  dictionary.each do |given_line|
+    if given_line.length > 0
+      first_white = given_line.index(' ')
+      word = given_line.slice(0..first_white)
+      clean = word.chop
+      last_character = clean[clean.length - 1]
+      if clean != ''
+        while clean[last_character] == ' ' || clean[last_character] == '1' ||
+                clean[last_character] == '2'
+          clean = clean.chop
+          last_character = clean[clean.length - 1]
+        end
+      end
+      pp(clean) if clean.length > 1 && clean_word(clean) == true
+    end
+  end
+end
+
+def clean_word(word)
+  comparison = word.downcase
+  if comparison.include?('-')
+    return false
+  elsif comparison.include?('.')
+    return false
+  elsif comparison.include?("'")
+    return false
+  elsif comparison.include?('/')
+    return false
+  elsif comparison.include?('a') == false &&
+        comparison.include?('e') == false &&
+        comparison.include?('i') == false &&
+        comparison.include?('u') == false &&
+        comparison.include?('o') == false && comparison.include?('y') == false
+    return false
+  elsif comparison.length <= 1
+    return false
+  else
+    return true
+  end
+end
+
+def parse_line(dic_entry)
+  if dic_entry.length > 0
+    entry = dic_entry.split(' ')
+    word = entry.slice!(0, 1)[0]
+    if word
+      pp(word) if clean_word(word)
+    end
+    entry.delete_at(0)
+    entry.each_with_index do |text, index|
+      if text === 'n.'
+        noun = entry[index - 1]
+        pp noun if (clean_word(noun) == true)
+      end
+    end
+  end
+end
+
+def grab_first_word_easy(file)
+  dictionary = grab_contents(file)
+  dictionary.each { |given_line| parse_line(given_line) }
+end
+
+# grab_first_word('./o_e_d.txt')
+# pp(clean_word('leg-of-mutton'))
+
+grab_first_word_easy('./o_e_d.txt')
+
+###########################################################################################
+# def create_target(set)
+#   operands = %w[+ - * /]
+#   requirements = [3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6]
+#   steps = requirements.sample(1)[0]
+#   working_numbers = set.sample(steps)
+#   pp(working_numbers)
+#   solution = []
+#   scounter = 1
+#   total = working_numbers.slice!(0, 1)[0]
+#   working_numbers.each_with_index do |given_number, index|
+#     operand = operands.sample(1)[0]
+#     if operand == '+'
+#       solution.push("#{total} + #{given_number} = #{total + given_number}")
+#       total = total + given_number
+#     elsif operand == '-'
+#       if total > given_number
+#         solution.push("#{total} - #{given_number} = #{total - given_number}")
+#         total = total - given_number
+#       else
+#         working_numbers.insert(index + 1, given_number)
+#         next
+#       end
+#     elsif operand == '*'
+#       solution.push("#{total} * #{given_number} =  #{total * given_number}")
+#       total = total * given_number
+#     elsif operand == '/'
+#       if total % given_number == 0 && given_number !== 1
+#         solution.push("#{total} / #{given_number} = #{total / given_number}")
+#         total = total / given_number
+#       else
+#         working_numbers.insert(index + 1, given_number)
+#         next
+#       end
+#     end
+#   end
+#   if total >= 100 && total <= 999
+#     pp(solution)
+#     pp(total)
+#     return solution, total
+#   else
+#     create_target(set)
+#   end
+# end
