@@ -211,6 +211,10 @@ def clean_word(word)
     return false
   elsif comparison.include?('/')
     return false
+  elsif comparison.include?('[')
+    return false
+  elsif comparison.include?(']')
+    return false
   elsif comparison.include?('a') == false &&
         comparison.include?('e') == false &&
         comparison.include?('i') == false &&
