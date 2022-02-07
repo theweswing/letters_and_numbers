@@ -215,6 +215,12 @@ def clean_word(word)
     return false
   elsif comparison.include?(']')
     return false
+  elsif comparison.include?('*')
+    return false
+  elsif comparison.include?('(')
+    return false
+  elsif comparison.include?(')')
+    return false
   elsif comparison.include?('a') == false &&
         comparison.include?('e') == false &&
         comparison.include?('i') == false &&
@@ -233,13 +239,68 @@ def parse_line(dic_entry)
     entry = dic_entry.split(' ')
     word = entry.slice!(0, 1)[0]
     if word
-      pp(word) if clean_word(word)
+      if (clean_word(word) == true)
+        if word.include?('1') || word.include?('2')
+          clean = word.chop
+          pp(clean)
+        else
+          pp(word)
+        end
+      end
+    end
+    if entry[0] == 'n.' || entry[0] == 'v.'
+      if entry.include?('(pl.') == false
+        plural = word + 's'
+        pp("simple plural: #{plural}")
+      end
     end
     entry.delete_at(0)
     entry.each_with_index do |text, index|
       if text === 'n.'
         noun = entry[index - 1]
-        pp noun if (clean_word(noun) == true)
+        if (clean_word(noun) == true)
+          pp("noun derived from #{word}:")
+          pp(noun)
+        end
+      elsif text === 'adj.'
+        adjective = entry[index - 1]
+        if (clean_word(adjective) == true)
+          pp("adjective derived from #{word}:")
+          pp(adjective)
+        end
+      elsif text === 'adv.'
+        adverb = entry[index - 1]
+        if (clean_word(adverb) == true)
+          pp("adverb derived from #{word}:")
+          pp(adverb)
+        end
+      elsif text === 'v.'
+        verb = entry[index - 1]
+        if (clean_word(verb) == true)
+          pp("verb derived from #{word}:")
+          pp(verb)
+        end
+      elsif text === '(pl.'
+        handle_plurals(entry, word, text, index)
+      end
+    end
+  end
+end
+
+def handle_plurals(entry, word, text, index)
+  if entry[index + 1] == '-s)'
+    plural = word + 's'
+    pp("plural of #{word}: #{plural}")
+  elsif entry[index + 1] == '-ies)'
+    counter = word.length - 1
+    while counter >= 0
+      if word[counter] == 'y'
+        base = word.slice(0, counter - 1)
+        plural = base + 'ies'
+        pp("plural of #{word}: #{plural}")
+        break
+      else
+        counter = counter - 1
       end
     end
   end
