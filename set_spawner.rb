@@ -171,6 +171,13 @@ def smart_create_target(set)
 end
 
 smart_create_target(s1)
+###########################################
+
+@word_db = []
+
+def add_word(word)
+  @word_db.push(word)
+end
 
 def grab_contents(file)
   opened_file = File.open(file)
@@ -196,7 +203,7 @@ def grab_first_word(file)
           last_character = clean[clean.length - 1]
         end
       end
-      pp(clean) if clean.length > 1 && clean_word(clean) == true
+      add_word(clean) if clean.length > 1 && clean_word(clean) == true
     end
   end
 end
@@ -242,44 +249,32 @@ def parse_line(dic_entry)
       if (clean_word(word) == true)
         if word.include?('1') || word.include?('2')
           clean = word.chop
-          pp(clean)
+          add_word(clean)
         else
-          pp(word)
+          add_word(word)
         end
       end
     end
     if entry[0] == 'n.' || entry[0] == 'v.'
       if entry.include?('(pl.') == false
         plural = word + 's'
-        pp("simple plural: #{plural}")
+        add_word(plural)
       end
     end
     entry.delete_at(0)
     entry.each_with_index do |text, index|
       if text === 'n.'
         noun = entry[index - 1]
-        if (clean_word(noun) == true)
-          pp("noun derived from #{word}:")
-          pp(noun)
-        end
+        add_word(noun) if (clean_word(noun) == true)
       elsif text === 'adj.'
         adjective = entry[index - 1]
-        if (clean_word(adjective) == true)
-          pp("adjective derived from #{word}:")
-          pp(adjective)
-        end
+        add_word(adjective) if (clean_word(adjective) == true)
       elsif text === 'adv.'
         adverb = entry[index - 1]
-        if (clean_word(adverb) == true)
-          pp("adverb derived from #{word}:")
-          pp(adverb)
-        end
+        add_word(adverb) if (clean_word(adverb) == true)
       elsif text === 'v.'
         verb = entry[index - 1]
-        if (clean_word(verb) == true)
-          pp("verb derived from #{word}:")
-          pp(verb)
-        end
+        add_word(verb) if (clean_word(verb) == true)
       elsif text === '(pl.'
         handle_plurals(entry, word, text, index)
       end
@@ -290,14 +285,14 @@ end
 def handle_plurals(entry, word, text, index)
   if entry[index + 1] == '-s)'
     plural = word + 's'
-    pp("plural of #{word}: #{plural}")
+    add_word(plural)
   elsif entry[index + 1] == '-ies)'
     counter = word.length - 1
     while counter >= 0
       if word[counter] == 'y'
         base = word.slice(0, counter - 1)
         plural = base + 'ies'
-        pp("plural of #{word}: #{plural}")
+        add_word(plural)
         break
       else
         counter = counter - 1
@@ -309,6 +304,7 @@ end
 def grab_first_word_easy(file)
   dictionary = grab_contents(file)
   dictionary.each { |given_line| parse_line(given_line) }
+  pp(@word_db)
 end
 
 # grab_first_word('./o_e_d.txt')
