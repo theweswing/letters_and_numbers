@@ -570,22 +570,24 @@ def anagram_finder(set)
       end
     end
   end
-  pp('2s:')
-  pp(twos.uniq)
-  pp('3s:')
-  pp(threes.uniq)
-  pp('4s:')
-  pp(fours.uniq)
-  pp('5s:')
-  pp(fives.uniq)
-  pp('6s:')
-  pp(sixes.uniq)
-  pp('7s:')
-  pp(sevens.uniq)
-  pp('8s:')
-  pp(eights.uniq)
-  pp('9s:')
-  pp(nines.uniq)
+  if sixes.length > 0 && sevens.length > 0 && eights.length > 0 &&
+       nines.length > 0
+    matches = {
+      twos: twos.uniq,
+      threes: threes.uniq,
+      fours: fours.uniq,
+      fives: fives.uniq,
+      sixes: sixes.uniq,
+      sevens: sevens.uniq,
+      eights: eights.uniq,
+      nines: nines.uniq,
+    }
+    pp matches
+    return matches
+  else
+    new_set = spawn_letter_set
+    anagram_finder(new_set)
+  end
 end
 
 anagram_finder(s2)
