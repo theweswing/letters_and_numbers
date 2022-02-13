@@ -538,8 +538,18 @@ end
 
 s2 = spawn_letter_set
 
+def word_includes_letters?(word, letters)
+  word.each do |given_letter|
+    if letters.count(given_letter) == word.count(given_letter)
+      next
+    else
+      return false
+    end
+  end
+  return true
+end
+
 def anagram_finder(set)
-  pp("letters: #{set}")
   twos = []
   threes = []
   fours = []
@@ -550,7 +560,7 @@ def anagram_finder(set)
   nines = []
   @dictionary.each do |word|
     split = word.split('')
-    if (split - set).empty?
+    if word_includes_letters?(split, set)
       if word.length == 2
         twos.push(word)
       elsif word.length == 3
@@ -582,7 +592,6 @@ def anagram_finder(set)
       eights: eights.uniq,
       nines: nines.uniq,
     }
-    pp matches
     return matches
   else
     new_set = spawn_letter_set
@@ -590,4 +599,24 @@ def anagram_finder(set)
   end
 end
 
-anagram_finder(s2)
+# anagram_finder(s2)
+
+# letters1 = %w[a a b b c c]
+# letters2 = %w[a b c]
+# pp(letters1 - letters2)
+
+# pp(word_includes_letters?(%w[s a g a], %w[s a g e]))
+
+# pp(%w[s a g a] - %w[s a g e])
+
+def quality_control()
+  counter = 1
+  while counter < 100
+    set = spawn_letter_set
+    matches = anagram_finder(set)
+    pp(matches[:nines])
+    counter = counter + 1
+  end
+end
+
+quality_control
