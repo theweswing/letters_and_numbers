@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :number_solutions
+  resources :letter_solutions
   resources :number_results
   resources :letter_results
   resources :number_games

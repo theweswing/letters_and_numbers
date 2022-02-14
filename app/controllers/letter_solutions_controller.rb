@@ -1,0 +1,2 @@
+class LetterSolutionsController < ApplicationController
+end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_04_051931) do
+ActiveRecord::Schema.define(version: 2022_02_14_201320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,15 @@ ActiveRecord::Schema.define(version: 2022_02_04_051931) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "letter_solutions", force: :cascade do |t|
+    t.bigint "letter_set_id"
+    t.integer "length"
+    t.string "word"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["letter_set_id"], name: "index_letter_solutions_on_letter_set_id"
+  end
+
   create_table "number_games", force: :cascade do |t|
     t.date "date"
     t.bigint "number_set_id"
@@ -80,6 +89,15 @@ ActiveRecord::Schema.define(version: 2022_02_04_051931) do
     t.string "solution"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "number_solutions", force: :cascade do |t|
+    t.bigint "number_set_id"
+    t.integer "step"
+    t.string "solution"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["number_set_id"], name: "index_number_solutions_on_number_set_id"
   end
 
   create_table "users", force: :cascade do |t|

@@ -386,7 +386,7 @@ smart_create_target
 def mass_create_number_sets()
   counter = 1
   sets = []
-  while counter <= 100
+  while counter <= 365
     set = smart_create_target
     if sets.include?(set) == false
       sets.push(set)
@@ -395,6 +395,7 @@ def mass_create_number_sets()
       next
     end
   end
+  pp(sets)
 end
 
 mass_create_number_sets
@@ -647,22 +648,20 @@ end
 
 # anagram_finder(s2)
 
-def quality_control()
+def mass_create_letter_sets()
   counter = 1
   sets = []
-  while counter < 100
+  while counter < 365
     set = spawn_letter_set
     matches = anagram_finder(set)
     if sets.include?(matches[:nines]) == false
-      pp(matches[:nines])
-      pp(matches[:eights])
-      pp(matches[:sevens])
-      set.push(matches[:nines])
+      sets.push(matches[:nines])
+      counter = counter + 1
     else
       next
-      counter = counter + 1
     end
   end
+  pp(sets)
 end
 
 # quality_control
@@ -782,3 +781,10 @@ first_sample = %w[
 ]
 
 # pp(check_q_c(first_sample))
+
+def initial_seed()
+  letter_sets = mass_create_letter_sets
+  number_sets = mass_create_number_sets
+end
+
+initial_seed

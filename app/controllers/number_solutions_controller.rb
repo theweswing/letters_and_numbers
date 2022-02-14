@@ -1,0 +1,2 @@
+class NumberSolutionsController < ApplicationController
+end
