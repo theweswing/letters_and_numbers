@@ -31,6 +31,8 @@ require 'pry'
   3,
   3,
 ]
+# @vowels = %w[a e i o u]
+# @consonants = %w[b c d f g h j k l m n p q r s t v w x y z]
 @vowels = %w[
   a
   a
@@ -515,7 +517,7 @@ end
 
 parse_dictionary('./oxford_english_dictionary.txt')
 
-#######################################
+######################################################################################
 
 def spawn_letter_set()
   set = []
@@ -611,12 +613,136 @@ end
 
 def quality_control()
   counter = 1
+  sets = []
   while counter < 100
     set = spawn_letter_set
     matches = anagram_finder(set)
-    pp(matches[:nines])
-    counter = counter + 1
+    if sets.include?(matches[:nines]) == false
+      pp(matches[:nines])
+      pp(matches[:eights])
+      pp(matches[:sevens])
+      set.push(matches[:nines])
+    else
+      next
+      counter = counter + 1
+    end
   end
 end
 
 quality_control
+
+def check_q_c(words)
+  words.each_with_object(Hash.new(0)) { |word, counts| counts[word] += 1 }
+end
+
+first_sample = %w[
+  manifesto
+  bandolier
+  grenadier
+  greetings
+  grenadier
+  cortisone
+  gasometer
+  patronize
+  poetaster
+  greediest
+  rusticate
+  tribesman
+  irateness
+  caparison
+  laundries
+  ordinance
+  depletion
+  signature
+  reinstate
+  remainder
+  centuries
+  patronize
+  probative
+  eglantine
+  inelegant
+  antiserum
+  saintlier
+  epidermal
+  dreariest
+  numerical
+  cremation
+  tramlines
+  dissenter
+  tiredness
+  signature
+  factories
+  scenarios
+  serration
+  unspoiled
+  saturnine
+  insensate
+  nursemaid
+  antipodes
+  germinate
+  gaberdine
+  remission
+  deficient
+  pearliest
+  departure
+  amnesties
+  meatiness
+  fornicate
+  remission
+  pantihose
+  selection
+  essential
+  unspoiled
+  draftiest
+  coastline
+  sectional
+  inspector
+  selection
+  elastomer
+  dreariest
+  policeman
+  reuniting
+  transpose
+  probation
+  essential
+  appertain
+  esperanto
+  laundries
+  digestion
+  irateness
+  digestion
+  essential
+  veracious
+  grandiose
+  amplifier
+  antipodes
+  serration
+  resonance
+  greediest
+  indicator
+  imposture
+  coastline
+  sectional
+  greediest
+  remission
+  desertion
+  batteries
+  catteries
+  limestone
+  milestone
+  disrepute
+  disrepute
+  seduction
+  careerist
+  traceries
+  serration
+  careerist
+  traceries
+  bandolier
+  nursemaid
+  hindrance
+  caparison
+  advertise
+]
+
+pp(check_q_c(first_sample))
