@@ -31,6 +31,33 @@ require 'pry'
   3,
   3,
 ]
+@operands = %w[+ + - - * * * / / /]
+@steps_required = [
+  3,
+  4,
+  4,
+  4,
+  4,
+  4,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  6,
+  6,
+  6,
+  6,
+  6,
+  6,
+  6,
+  6,
+]
 # @vowels = %w[a e i o u]
 # @consonants = %w[b c d f g h j k l m n p q r s t v w x y z]
 @vowels = %w[
@@ -234,25 +261,38 @@ def spawn_number_set()
   return set
 end
 
-s1 = spawn_number_set
-
 # Grab one random number from created set to start, then either perform A or B
 # A: grab another number and an operand, then perform that operation on our total
 # B:, grab two numbers and an operand, perform operand on those numbers, then add result to our array of numbers to be used in a future operation.
 # go until array is empty
 
-def smart_create_target(set)
-  operands = %w[+ + - - * * * / / /]
-  steps_required = [3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6]
-  steps = steps_required.sample(1)[0]
+def two_int_clean_up(index1, index2, set, result)
+  set.delete_at(index1)
+  set.delete_at(index2)
+  set.push(result)
+end
+
+def valid_answer?(number, set)
+  string = number.to_s
+  ones_digit = string[2]
+  if number >= 100 && number <= 999 && number % 5 != 0 &&
+       set.include?(ones_digit) == false
+    return true
+  else
+    return false
+  end
+end
+
+def smart_create_target()
+  set = spawn_number_set
+  steps = @steps_required.sample(1)[0]
   working_numbers = set.sample(steps)
   solution = []
   operating_on = [1, 1, 1, 2, 2]
   previous_operand = ''
   total = working_numbers.slice!(0, 1)[0]
-  pp(set)
   while working_numbers.length > 0
-    operand = operands.sample(1)[0]
+    operand = @operands.sample(1)[0]
     if operating_on.sample(1)[0] == 1
       given_number = working_numbers.sample(1)[0]
       given_index = working_numbers.index(given_number)
@@ -293,21 +333,15 @@ def smart_create_target(set)
         if operand == '+'
           sum = two_nums[0] + two_nums[1]
           solution.push("#{two_nums[0]} + #{two_nums[1]} = #{sum}")
-          working_numbers.delete_at(index_one)
-          working_numbers.delete_at(index_two)
-          working_numbers.push(sum)
+          two_int_clean_up(index_one, index_two, working_numbers, sum)
         elsif operand == '-'
           if two_nums[0] > two_nums[1]
             difference = two_nums[0] - two_nums[1]
-            working_numbers.delete_at(index_one)
-            working_numbers.delete_at(index_two)
-            working_numbers.push(difference)
+            two_int_clean_up(index_one, index_two, working_numbers, difference)
             solution.push("#{two_nums[0]} - #{two_nums[1]} = #{difference}")
           elsif two_nums[1] > two_nums[0]
             difference = two_nums[1] - two_nums[0]
-            working_numbers.delete_at(index_one)
-            working_numbers.delete_at(index_two)
-            working_numbers.push(difference)
+            two_int_clean_up(index_one, index_two, working_numbers, difference)
             solution.push("#{two_nums[1]} - #{two_nums[0]} = #{difference}")
           elsif two_nums[1] == two_nums[0]
             next
@@ -315,9 +349,7 @@ def smart_create_target(set)
         elsif operand == '*'
           if (two_nums[1] != 1 && two_nums[0] != 1)
             product = two_nums[0] * two_nums[1]
-            working_numbers.delete_at(index_one)
-            working_numbers.delete_at(index_two)
-            working_numbers.push(product)
+            two_int_clean_up(index_one, index_two, working_numbers, product)
             solution.push("#{two_nums[0]} * #{two_nums[1]} = #{product}")
           else
             next
@@ -325,15 +357,11 @@ def smart_create_target(set)
         elsif operand == '/'
           if (two_nums[0] % two_nums[1] == 0 && two_nums[1] != 1)
             quotient = two_nums[0] / two_nums[1]
-            working_numbers.delete_at(index_one)
-            working_numbers.delete_at(index_two)
-            working_numbers.push(quotient)
+            two_int_clean_up(index_one, index_two, working_numbers, quotient)
             solution.push("#{two_nums[0]} / #{two_nums[1]} = #{quotient}")
           elsif (two_nums[1] % two_nums[0] == 0 && two_nums[0] != 1)
             quotient = two_nums[1] / two_nums[0]
-            working_numbers.delete_at(index_one)
-            working_numbers.delete_at(index_two)
-            working_numbers.push(quotient)
+            two_int_clean_up(index_one, index_two, working_numbers, quotient)
             solution.push("#{two_nums[1]} / #{two_nums[0]} = #{quotient}")
           else
             next
@@ -344,16 +372,32 @@ def smart_create_target(set)
       end
     end
   end
-  if total >= 100 && total <= 999
+  if valid_answer?(total, set)
+    pp(set)
     pp(total)
-    pp(solution)
-    return solution, total
+    return set, solution, total
   else
-    smart_create_target(set)
+    smart_create_target
   end
 end
 
-smart_create_target(s1)
+smart_create_target
+
+def mass_create_number_sets()
+  counter = 1
+  sets = []
+  while counter <= 100
+    set = smart_create_target
+    if sets.include?(set) == false
+      sets.push(set)
+      counter += 1
+    else
+      next
+    end
+  end
+end
+
+mass_create_number_sets
 
 ################# DICTIONARY ######################
 # Parsing OED txt file for a list of words:
@@ -603,14 +647,6 @@ end
 
 # anagram_finder(s2)
 
-# letters1 = %w[a a b b c c]
-# letters2 = %w[a b c]
-# pp(letters1 - letters2)
-
-# pp(word_includes_letters?(%w[s a g a], %w[s a g e]))
-
-# pp(%w[s a g a] - %w[s a g e])
-
 def quality_control()
   counter = 1
   sets = []
@@ -629,7 +665,7 @@ def quality_control()
   end
 end
 
-quality_control
+# quality_control
 
 def check_q_c(words)
   words.each_with_object(Hash.new(0)) { |word, counts| counts[word] += 1 }
@@ -745,4 +781,4 @@ first_sample = %w[
   advertise
 ]
 
-pp(check_q_c(first_sample))
+# pp(check_q_c(first_sample))
