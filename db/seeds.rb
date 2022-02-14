@@ -6,8 +6,6 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-require 'pry'
-
 @bigs = [100, 75, 50, 25]
 @smalls = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 @big_options = [
@@ -291,9 +289,51 @@ def valid_answer?(number, set)
   end
 end
 
+def create_number_set_to_db(set, total, solution)
+  num_set = NumberSet.new(target: total)
+  bigs = 0
+  smalls = 0
+  counter = 1
+  set.each do |num|
+    if num == 25 || num == 50 || num == 75 || num == 100
+      bigs = bigs + 1
+    else
+      smalls = smalls + 1
+    end
+    if counter == 1
+      num_set[:number_one] = num
+      counter = counter + 1
+    elsif counter == 2
+      num_set[:number_two] = num
+      counter = counter + 1
+    elsif counter == 3
+      num_set[:number_three] = num
+      counter = counter + 1
+    elsif counter == 4
+      num_set[:number_four] = num
+      counter = counter + 1
+    elsif counter == 5
+      num_set[:number_five] = num
+      counter = counter + 1
+    elsif counter == 6
+      num_set[:number_six] = num
+      counter = counter + 1
+    end
+  end
+  num_set[:bigs] = bigs
+  num_set[:smalls] = smalls
+  step_counter = 1
+  solution.each do |step|
+    solution_step = NumberSolution.new(step: step_counter, solution: step)
+    num_set.number_solutions << solution_step
+    step_counter = step_counter + 1
+    solution_step.save
+  end
+  num_set.save
+end
+
 def smart_create_target()
   set = spawn_number_set
-
   steps = @steps_required.sample(1)[0]
   working_numbers = set.sample(steps)
   solution = []
@@ -318,7 +358,7 @@ def smart_create_target()
           next
         end
       elsif operand == '*'
-        if (given_number != 1)
+        if (given_number != 1) && (total != 1)
           solution.push("#{total} * #{given_number} =  #{total * given_number}")
           total = total * given_number
           working_numbers.delete_at(given_index)
@@ -382,8 +422,7 @@ def smart_create_target()
     end
   end
   if valid_answer?(total, set)
-    pp(set)
-    pp(total)
+    create_number_set_to_db(set, total, solution)
     return set, solution, total
   else
     smart_create_target
@@ -407,7 +446,7 @@ def mass_create_number_sets()
   pp(sets)
 end
 
-mass_create_number_sets
+# mass_create_number_sets
 
 ################# DICTIONARY ######################
 # Parsing OED txt file for a list of words:
@@ -589,10 +628,14 @@ def spawn_letter_set()
     set.push(given_cons)
     ccounter = ccounter + 1
   end
-  return set
+  if LetterSet.find_by(letters: set.join) == nil
+    return set
+  else
+    spawn_letter_set
+  end
 end
 
-s2 = spawn_letter_set
+# s2 = spawn_letter_set
 
 def word_includes_letters?(word, letters)
   word.each do |given_letter|
@@ -605,7 +648,31 @@ def word_includes_letters?(word, letters)
   return true
 end
 
-def anagram_finder(set)
+def create_letter_set_to_db(set)
+  letters = set.join
+  vowels = 0
+  consonants = 0
+  set.each do |given_letter|
+    if given_letter == 'a' || given_letter == 'e' || given_letter == 'o' ||
+         given_letter == 'i' || given_letter == 'u'
+      vowels = vowels + 1
+    end
+  end
+  letter_set =
+    LetterSet.new(vowels: vowels, consonants: (9 - vowels), letters: letters)
+end
+
+def create_letter_solutions_to_db(letter_set, words)
+  words.each do |given_word|
+    solution =
+      LetterSolution.create(word: given_word, length: given_word.length)
+    letter_set.letter_solutions << solution
+  end
+end
+
+def anagram_finder()
+  set = spawn_letter_set
+  letter_set = create_letter_set_to_db(set)
   twos = []
   threes = []
   fours = []
@@ -638,24 +705,21 @@ def anagram_finder(set)
   end
   if sixes.length > 0 && sevens.length > 0 && eights.length > 0 &&
        nines.length > 0
-    matches = {
-      twos: twos.uniq,
-      threes: threes.uniq,
-      fours: fours.uniq,
-      fives: fives.uniq,
-      sixes: sixes.uniq,
-      sevens: sevens.uniq,
-      eights: eights.uniq,
-      nines: nines.uniq,
-    }
-    return matches
+    letter_set.save
+    create_letter_solutions_to_db(letter_set, twos.uniq)
+    create_letter_solutions_to_db(letter_set, threes.uniq)
+    create_letter_solutions_to_db(letter_set, fours.uniq)
+    create_letter_solutions_to_db(letter_set, fives.uniq)
+    create_letter_solutions_to_db(letter_set, sixes.uniq)
+    create_letter_solutions_to_db(letter_set, sevens.uniq)
+    create_letter_solutions_to_db(letter_set, eights.uniq)
+    create_letter_solutions_to_db(letter_set, nines.uniq)
   else
-    new_set = spawn_letter_set
-    anagram_finder(new_set)
+    anagram_finder
   end
 end
 
-# anagram_finder(s2)
+anagram_finder
 
 def mass_create_letter_sets()
   counter = 1
