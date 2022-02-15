@@ -758,7 +758,7 @@ def find_all_letter_sets()
     three_lws = []
     two_lws = []
     split = nine_lw.word.split('')
-    DicWord.eights.each do |eight_lw|
+    DicWord.eights.uniq.each do |eight_lw|
       comp_split = eight_lw.word.split('')
       if word_includes_letters?(comp_split, split)
         eight_lws.push(eight_lw)
@@ -767,7 +767,7 @@ def find_all_letter_sets()
       end
     end
     if eight_lws.length > 0
-      DicWord.sevens.each do |seven_lw|
+      DicWord.sevens.uniq.each do |seven_lw|
         comp_split = seven_lw.word.split('')
         if word_includes_letters?(comp_split, split)
           seven_lws.push(seven_lw.word)
@@ -776,7 +776,7 @@ def find_all_letter_sets()
         end
       end
       if seven_lws.length > 0
-        DicWord.sixes.each do |six_lw|
+        DicWord.sixes.uniq.each do |six_lw|
           comp_split = six_lw.word.split('')
           if word_includes_letters?(comp_split, split)
             six_lws.push(six_lw.word)
@@ -785,7 +785,7 @@ def find_all_letter_sets()
           end
         end
         if six_lws.length > 0
-          DicWord.fives.each do |five_lw|
+          DicWord.fives.uniq.each do |five_lw|
             comp_split = five_lw.word.split('')
             if word_includes_letters?(comp_split, split)
               five_lws.push(five_lw.word)
@@ -794,7 +794,7 @@ def find_all_letter_sets()
             end
           end
           if five_lws.length > 0
-            DicWord.fours.each do |four_lw|
+            DicWord.fours.uniq.each do |four_lw|
               comp_split = four_lw.word.split('')
               if word_includes_letters?(comp_split, split)
                 four_lws.push(four_lw.word)
@@ -803,7 +803,7 @@ def find_all_letter_sets()
               end
             end
             if four_lws.length > 0
-              DicWord.threes.each do |three_lw|
+              DicWord.threes.uniq.each do |three_lw|
                 comp_split = three_lw.word.split('')
                 if word_includes_letters?(comp_split, split)
                   three_lws.push(three_lw.word)
@@ -812,7 +812,7 @@ def find_all_letter_sets()
                 end
               end
               if three_lws.length > 0
-                DicWord.twos.each do |two_lw|
+                DicWord.twos.uniq.each do |two_lw|
                   comp_split = two_lw.word.split('')
                   if word_includes_letters?(comp_split, split)
                     two_lws.push(two_lw.word)
@@ -830,13 +830,11 @@ def find_all_letter_sets()
                   threes: three_lws.uniq.length,
                   twos: two_lws.uniq.length,
                 }
-                successes.push(entry)
+                successes.push(entry[:word])
                 pp(nine_lw)
                 pp(eight_lws)
                 pp(seven_lws)
                 pp(six_lws)
-                pp(five_lws)
-                pp(four_lws)
                 next
               end
             end

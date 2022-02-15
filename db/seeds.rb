@@ -612,28 +612,28 @@ parse_dictionary('./oxford_english_dictionary.txt')
 
 ######################################################################################
 
-def spawn_letter_set()
-  set = []
-  number_of_vowels = @vowel_options.sample(1)[0]
-  number_of_consonants = 9 - number_of_vowels
-  vcounter = 1
-  ccounter = 1
-  while vcounter <= number_of_vowels
-    given_vowel = @vowels.sample(1)[0]
-    set.push(given_vowel)
-    vcounter = vcounter + 1
-  end
-  while ccounter <= number_of_consonants
-    given_cons = @consonants.sample(1)[0]
-    set.push(given_cons)
-    ccounter = ccounter + 1
-  end
-  if LetterSet.find_by(letters: set.join) == nil
-    return set
-  else
-    spawn_letter_set
-  end
-end
+# def spawn_letter_set()
+#   set = []
+#   number_of_vowels = @vowel_options.sample(1)[0]
+#   number_of_consonants = 9 - number_of_vowels
+#   vcounter = 1
+#   ccounter = 1
+#   while vcounter <= number_of_vowels
+#     given_vowel = @vowels.sample(1)[0]
+#     set.push(given_vowel)
+#     vcounter = vcounter + 1
+#   end
+#   while ccounter <= number_of_consonants
+#     given_cons = @consonants.sample(1)[0]
+#     set.push(given_cons)
+#     ccounter = ccounter + 1
+#   end
+#   if LetterSet.find_by(letters: set.join) == nil
+#     return set
+#   else
+#     spawn_letter_set
+#   end
+# end
 
 # s2 = spawn_letter_set
 
@@ -648,263 +648,310 @@ def word_includes_letters?(word, letters)
   return true
 end
 
-def create_letter_set_to_db(set)
-  letters = set.join
-  vowels = 0
-  consonants = 0
-  set.each do |given_letter|
-    if given_letter == 'a' || given_letter == 'e' || given_letter == 'o' ||
-         given_letter == 'i' || given_letter == 'u'
-      vowels = vowels + 1
-    end
-  end
-  letter_set =
-    LetterSet.new(vowels: vowels, consonants: (9 - vowels), letters: letters)
-end
+# def create_letter_set_to_db(set)
+#   letters = set.join
+#   vowels = 0
+#   consonants = 0
+#   set.each do |given_letter|
+#     if given_letter == 'a' || given_letter == 'e' || given_letter == 'o' ||
+#          given_letter == 'i' || given_letter == 'u'
+#       vowels = vowels + 1
+#     end
+#   end
+#   letter_set =
+#     LetterSet.new(vowels: vowels, consonants: (9 - vowels), letters: letters)
+# end
 
-def create_letter_solutions_to_db(letter_set, words)
-  words.each do |given_word|
-    solution =
-      LetterSolution.create(word: given_word, length: given_word.length)
-    letter_set.letter_solutions << solution
-  end
-end
+# def create_letter_solutions_to_db(letter_set, words)
+#   words.each do |given_word|
+#     solution =
+#       LetterSolution.create(word: given_word, length: given_word.length)
+#     letter_set.letter_solutions << solution
+#   end
+# end
 
-def anagram_finder()
-  set = spawn_letter_set
-  letter_set = create_letter_set_to_db(set)
-  twos = []
-  threes = []
-  fours = []
-  fives = []
-  sixes = []
-  sevens = []
-  eights = []
-  nines = []
-  @dictionary.each do |word|
-    split = word.split('')
-    if word_includes_letters?(split, set)
-      if word.length == 2
-        twos.push(word)
-      elsif word.length == 3
-        threes.push(word)
-      elsif word.length == 4
-        fours.push(word)
-      elsif word.length == 5
-        fives.push(word)
-      elsif word.length == 6
-        sixes.push(word)
-      elsif word.length == 7
-        sevens.push(word)
-      elsif word.length == 8
-        eights.push(word)
-      elsif word.length == 9
-        nines.push(word)
-      end
-    end
-  end
-  if sixes.length > 0 && sevens.length > 0 && eights.length > 0 &&
-       nines.length > 0
-    letter_set.save
-    create_letter_solutions_to_db(letter_set, twos.uniq)
-    create_letter_solutions_to_db(letter_set, threes.uniq)
-    create_letter_solutions_to_db(letter_set, fours.uniq)
-    create_letter_solutions_to_db(letter_set, fives.uniq)
-    create_letter_solutions_to_db(letter_set, sixes.uniq)
-    create_letter_solutions_to_db(letter_set, sevens.uniq)
-    create_letter_solutions_to_db(letter_set, eights.uniq)
-    create_letter_solutions_to_db(letter_set, nines.uniq)
-  else
-    anagram_finder
-  end
-end
+# def anagram_finder()
+#   set = spawn_letter_set
+#   letter_set = create_letter_set_to_db(set)
+#   twos = []
+#   threes = []
+#   fours = []
+#   fives = []
+#   sixes = []
+#   sevens = []
+#   eights = []
+#   nines = []
+#   @dictionary.each do |word|
+#     split = word.split('')
+#     if word_includes_letters?(split, set)
+#       if word.length == 2
+#         twos.push(word)
+#       elsif word.length == 3
+#         threes.push(word)
+#       elsif word.length == 4
+#         fours.push(word)
+#       elsif word.length == 5
+#         fives.push(word)
+#       elsif word.length == 6
+#         sixes.push(word)
+#       elsif word.length == 7
+#         sevens.push(word)
+#       elsif word.length == 8
+#         eights.push(word)
+#       elsif word.length == 9
+#         nines.push(word)
+#       end
+#     end
+#   end
+#   if sixes.length > 0 && sevens.length > 0 && eights.length > 0 &&
+#        nines.length > 0
+#     letter_set.save
+#     create_letter_solutions_to_db(letter_set, twos.uniq)
+#     create_letter_solutions_to_db(letter_set, threes.uniq)
+#     create_letter_solutions_to_db(letter_set, fours.uniq)
+#     create_letter_solutions_to_db(letter_set, fives.uniq)
+#     create_letter_solutions_to_db(letter_set, sixes.uniq)
+#     create_letter_solutions_to_db(letter_set, sevens.uniq)
+#     create_letter_solutions_to_db(letter_set, eights.uniq)
+#     create_letter_solutions_to_db(letter_set, nines.uniq)
+#   else
+#     anagram_finder
+#   end
+# end
 
-anagram_finder
+# anagram_finder
 
-def mass_create_letter_sets()
-  counter = 1
-  sets = []
-  while counter < 365
-    set = spawn_letter_set
-    matches = anagram_finder(set)
-    if sets.include?(matches[:nines]) == false
-      sets.push(matches[:nines])
-      counter = counter + 1
-    else
-      next
-    end
-  end
-  pp(sets)
-end
+# def mass_create_letter_sets()
+#   counter = 1
+#   sets = []
+#   while counter < 365
+#     set = spawn_letter_set
+#     matches = anagram_finder(set)
+#     if sets.include?(matches[:nines]) == false
+#       sets.push(matches[:nines])
+#       counter = counter + 1
+#     else
+#       next
+#     end
+#   end
+#   pp(sets)
+# end
 
 class DicWord
+  @@length9 = []
+  @@length8 = []
+  @@length7 = []
+  @@length6 = []
+  @@length5 = []
+  @@length4 = []
+  @@length3 = []
+  @@length2 = []
+  @@all = []
 
-    @@length9 = []
-    @@length8 = []
-    @@length7 = []
-    @@length6 = []
-    @@length5 = []
-    @@length4 = []
-    @@length3 = []
-    @@length2 = []
-    @@all = []
-
-    def initialize(word,length)
-        @word: word
-        @length: length
-        @@all << self
-        if length == 9
-            @@length9 << self
-        elsif length == 8
-            @@length8 << self
-        elsif length == 7
-            @@length7 << self
-        elsif length == 6
-            @@length6 << self
-        elsif length == 5
-            @@length5 << self
-        elsif length == 4
-            @@length4 << self
-        elsif length == 3
-            @@length3 << self
-        elsif length == 2
-            @@length2 << self
-        end
+  def initialize(word, length)
+    @word = word
+    @length = length
+    @@all << self
+    if length == 9
+      @@length9 << self
+    elsif length == 8
+      @@length8 << self
+    elsif length == 7
+      @@length7 << self
+    elsif length == 6
+      @@length6 << self
+    elsif length == 5
+      @@length5 << self
+    elsif length == 4
+      @@length4 << self
+    elsif length == 3
+      @@length3 << self
+    elsif length == 2
+      @@length2 << self
     end
+  end
 
-    def self.all
-        return @@all
-    end
+  def word
+    return @word
+  end
 
-    def self.nines
-        return @@length9
-    end
+  def self.all
+    return @@all
+  end
 
-    def self.eights
-        return @@length8
-    end
+  def self.nines
+    return @@length9
+  end
 
-    def self.sevens
-        return @@length7
-    end
+  def self.eights
+    return @@length8
+  end
 
-    def self.sixes
-        return @@length6
-    end
+  def self.sevens
+    return @@length7
+  end
 
-    def self.fives
-        return @@length5
-    end
+  def self.sixes
+    return @@length6
+  end
 
-    def self.fours
-        return @@length4
-    end
+  def self.fives
+    return @@length5
+  end
 
-    def self.threes
-        return @@length3
-    end
+  def self.fours
+    return @@length4
+  end
 
-    def self.twos
-        return @@length2
-    end
+  def self.threes
+    return @@length3
+  end
+
+  def self.twos
+    return @@length2
+  end
 end
 
 def find_all_letter_sets()
-    @dictionary.each do |word|
-        DicWord.new(word,word.length)
-    end
-    all_nines = DicWord.nines
-    all_nines.each do |nine_lw|
-        counter = 0
-        eight_lws = []
-        seven_lws = []
-        sixe_lws = []
-        five_lws = []
-        four_lws = []
-        three_lws = []
-        two_lws = []
-        split = nine.split("")
-        DicWord.eights.each do |eight_lw|
-            comp_split = eight_lw.split("")
-            if word_includes_letters?(comp_split,split)
-                eight_lws.push(eight_lw)
+  @dictionary.each { |word| DicWord.new(word, word.length) }
+  all_nines = DicWord.nines
+  successes = []
+  db_counter = 1
+  all_nines.uniq.each do |nine_lw|
+    counter = 0
+    eight_lws = []
+    seven_lws = []
+    six_lws = []
+    five_lws = []
+    four_lws = []
+    three_lws = []
+    two_lws = []
+    split = nine_lw.word.split('')
+    if LetterSet.find_by(letters: split.sort.join) == nil
+      DicWord.eights.uniq.each do |eight_lw|
+        comp_split = eight_lw.word.split('')
+        if word_includes_letters?(comp_split, split)
+          eight_lws.push(eight_lw)
+        else
+          next
+        end
+      end
+      if eight_lws.length > 0
+        DicWord.sevens.uniq.each do |seven_lw|
+          comp_split = seven_lw.word.split('')
+          if word_includes_letters?(comp_split, split)
+            seven_lws.push(seven_lw.word)
+          else
+            next
+          end
+        end
+        if seven_lws.length > 0
+          DicWord.sixes.uniq.each do |six_lw|
+            comp_split = six_lw.word.split('')
+            if word_includes_letters?(comp_split, split)
+              six_lws.push(six_lw.word)
             else
+              next
+            end
+          end
+          if six_lws.length > 0
+            DicWord.fives.uniq.each do |five_lw|
+              comp_split = five_lw.word.split('')
+              if word_includes_letters?(comp_split, split)
+                five_lws.push(five_lw.word)
+              else
                 next
+              end
             end
-        end
-        if eight_lws.length > 0
-            DicWord.sevens.each do |seven_lw|
-                comp_split = seven_lw.split("")
-                if word_includes_letters?(comp_split,split)
-                    seven_lws.push(seven_lw)
+            if five_lws.length > 0
+              DicWord.fours.uniq.each do |four_lw|
+                comp_split = four_lw.word.split('')
+                if word_includes_letters?(comp_split, split)
+                  four_lws.push(four_lw.word)
                 else
+                  next
+                end
+              end
+              if four_lws.length > 0
+                DicWord.threes.uniq.each do |three_lw|
+                  comp_split = three_lw.word.split('')
+                  if word_includes_letters?(comp_split, split)
+                    three_lws.push(three_lw.word)
+                  else
                     next
+                  end
                 end
-            end
-            if seven_lws.length > 0
-                DicWord.sixes.each do |six_lw|
-                    comp_split = six_lw.split("")
-                    if word_includes_letters?(comp_split,split)
-                        six_lws.push(six_lw)
+                if three_lws.length > 0
+                  DicWord.twos.uniq.each do |two_lw|
+                    comp_split = two_lw.word.split('')
+                    if word_includes_letters?(comp_split, split)
+                      two_lws.push(two_lw.word)
                     else
-                        next
+                      next
                     end
+                  end
+                  entry = {
+                    word: nine_lw.word,
+                    eights: eight_lws.uniq.length,
+                    sevens: seven_lws.uniq.length,
+                    sixes: six_lws.uniq.length,
+                    fives: five_lws.uniq.length,
+                    fours: four_lws.uniq.length,
+                    threes: three_lws.uniq.length,
+                    twos: two_lws.uniq.length,
+                  }
+                  letter_set = LetterSet.create(letters: split.sort.join)
+                  perfect_solution =
+                    LetterSolution.create(word: nine_lw.word, length: 9)
+                  pp(db_counter)
+                  pp(nine_lw)
+                  db_counter = db_counter + 1
+                  eight_lws.each do |eight_lw|
+                    letter_solution =
+                      LetterSolution.create(word: eight_lw, length: 8)
+                    letter_set.letter_solutions << letter_solution
+                  end
+                  seven_lws.each do |seven_lw|
+                    letter_solution =
+                      LetterSolution.create(word: seven_lw, length: 7)
+                    letter_set.letter_solutions << letter_solution
+                  end
+                  six_lws.each do |six_lw|
+                    letter_solution =
+                      LetterSolution.create(word: six_lw, length: 6)
+                    letter_set.letter_solutions << letter_solution
+                  end
+                  five_lws.each do |five_lw|
+                    letter_solution =
+                      LetterSolution.create(word: five_lw, length: 5)
+                    letter_set.letter_solutions << letter_solution
+                  end
+                  four_lws.each do |four_lw|
+                    letter_solution =
+                      LetterSolution.create(word: four_lw, length: 4)
+                    letter_set.letter_solutions << letter_solution
+                  end
+                  three_lws.each do |three_lw|
+                    letter_solution =
+                      LetterSolution.create(word: three_lw, length: 3)
+                    letter_set.letter_solutions << letter_solution
+                  end
+                  two_lws.each do |two_lw|
+                    letter_solution =
+                      LetterSolution.create(word: two_lw, length: 2)
+                    letter_set.letter_solutions << letter_solution
+                  end
+                  next
                 end
-                if six_lws.length > 0
-                    DicWord.fives.each do |five_lw|
-                        comp_split = five_lw.split("")
-                        if word_includes_letters?(comp_split,split)
-                            five_lws.push(five_lw)
-                        else
-                            next
-                        end
-                    end
-                    if five_lws.length > 0
-                        DicWord.fours.each do |four_lw|
-                            comp_split = four_lw.split("")
-                            if word_includes_letters?(comp_split,split)
-                                four_lws.push(four_lw)
-                            else
-                                next
-                        end
-                    end
-                    if four_lws.length > 0
-                        DicWord.threes.each do |three_lw|
-                            comp_split =  three_lw.split("")
-                            if word_includes_letters?(comp_split,split)
-                                three_lws.push(three_lw)
-                            else
-                                next
-                            end
-                        end
-                        if three_lws.length > 0
-                            DicWord.twos.each do |two_lw|
-                                comp_split = two_lw.split("")
-                                if word_includes_letters?(comp_split,split)
-                                    two_lws.push(two_lw)
-                                else
-                                    next
-                                end
-                            end
-                            pp(nine_lw)
-                            pp(eight_lws)
-                            pp(seven_lws)
-                            pp(six_lws)
-                            pp(five_lws)
-                            pp(four_lws)
-                            pp(three_lws)
-                            pp(two_lws)
-                            next
-                        end
-                    end
-                end
+              end
             end
+          end
         end
+      end
     end
+  end
 end
+
+# find_all_letter_sets
 
 find_all_letter_sets
-
-def perfect_anagram_finder()
-
-end
