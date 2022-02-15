@@ -736,3 +736,175 @@ def mass_create_letter_sets()
   end
   pp(sets)
 end
+
+class DicWord
+
+    @@length9 = []
+    @@length8 = []
+    @@length7 = []
+    @@length6 = []
+    @@length5 = []
+    @@length4 = []
+    @@length3 = []
+    @@length2 = []
+    @@all = []
+
+    def initialize(word,length)
+        @word: word
+        @length: length
+        @@all << self
+        if length == 9
+            @@length9 << self
+        elsif length == 8
+            @@length8 << self
+        elsif length == 7
+            @@length7 << self
+        elsif length == 6
+            @@length6 << self
+        elsif length == 5
+            @@length5 << self
+        elsif length == 4
+            @@length4 << self
+        elsif length == 3
+            @@length3 << self
+        elsif length == 2
+            @@length2 << self
+        end
+    end
+
+    def self.all
+        return @@all
+    end
+
+    def self.nines
+        return @@length9
+    end
+
+    def self.eights
+        return @@length8
+    end
+
+    def self.sevens
+        return @@length7
+    end
+
+    def self.sixes
+        return @@length6
+    end
+
+    def self.fives
+        return @@length5
+    end
+
+    def self.fours
+        return @@length4
+    end
+
+    def self.threes
+        return @@length3
+    end
+
+    def self.twos
+        return @@length2
+    end
+end
+
+def find_all_letter_sets()
+    @dictionary.each do |word|
+        DicWord.new(word,word.length)
+    end
+    all_nines = DicWord.nines
+    all_nines.each do |nine_lw|
+        counter = 0
+        eight_lws = []
+        seven_lws = []
+        sixe_lws = []
+        five_lws = []
+        four_lws = []
+        three_lws = []
+        two_lws = []
+        split = nine.split("")
+        DicWord.eights.each do |eight_lw|
+            comp_split = eight_lw.split("")
+            if word_includes_letters?(comp_split,split)
+                eight_lws.push(eight_lw)
+            else
+                next
+            end
+        end
+        if eight_lws.length > 0
+            DicWord.sevens.each do |seven_lw|
+                comp_split = seven_lw.split("")
+                if word_includes_letters?(comp_split,split)
+                    seven_lws.push(seven_lw)
+                else
+                    next
+                end
+            end
+            if seven_lws.length > 0
+                DicWord.sixes.each do |six_lw|
+                    comp_split = six_lw.split("")
+                    if word_includes_letters?(comp_split,split)
+                        six_lws.push(six_lw)
+                    else
+                        next
+                    end
+                end
+                if six_lws.length > 0
+                    DicWord.fives.each do |five_lw|
+                        comp_split = five_lw.split("")
+                        if word_includes_letters?(comp_split,split)
+                            five_lws.push(five_lw)
+                        else
+                            next
+                        end
+                    end
+                    if five_lws.length > 0
+                        DicWord.fours.each do |four_lw|
+                            comp_split = four_lw.split("")
+                            if word_includes_letters?(comp_split,split)
+                                four_lws.push(four_lw)
+                            else
+                                next
+                        end
+                    end
+                    if four_lws.length > 0
+                        DicWord.threes.each do |three_lw|
+                            comp_split =  three_lw.split("")
+                            if word_includes_letters?(comp_split,split)
+                                three_lws.push(three_lw)
+                            else
+                                next
+                            end
+                        end
+                        if three_lws.length > 0
+                            DicWord.twos.each do |two_lw|
+                                comp_split = two_lw.split("")
+                                if word_includes_letters?(comp_split,split)
+                                    two_lws.push(two_lw)
+                                else
+                                    next
+                                end
+                            end
+                            pp(nine_lw)
+                            pp(eight_lws)
+                            pp(seven_lws)
+                            pp(six_lws)
+                            pp(five_lws)
+                            pp(four_lws)
+                            pp(three_lws)
+                            pp(two_lws)
+                            next
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+find_all_letter_sets
+
+def perfect_anagram_finder()
+
+end

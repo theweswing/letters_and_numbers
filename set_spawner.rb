@@ -381,7 +381,7 @@ def smart_create_target()
   end
 end
 
-smart_create_target
+# smart_create_target
 
 def mass_create_number_sets()
   counter = 1
@@ -398,7 +398,7 @@ def mass_create_number_sets()
   pp(sets)
 end
 
-mass_create_number_sets
+# mass_create_number_sets
 
 ################# DICTIONARY ######################
 # Parsing OED txt file for a list of words:
@@ -651,7 +651,7 @@ end
 def mass_create_letter_sets()
   counter = 1
   sets = []
-  while counter < 365
+  while counter < 10
     set = spawn_letter_set
     matches = anagram_finder(set)
     if sets.include?(matches[:nines]) == false
@@ -664,127 +664,191 @@ def mass_create_letter_sets()
   pp(sets)
 end
 
-# quality_control
-
-def check_q_c(words)
-  words.each_with_object(Hash.new(0)) { |word, counts| counts[word] += 1 }
-end
-
-first_sample = %w[
-  manifesto
-  bandolier
-  grenadier
-  greetings
-  grenadier
-  cortisone
-  gasometer
-  patronize
-  poetaster
-  greediest
-  rusticate
-  tribesman
-  irateness
-  caparison
-  laundries
-  ordinance
-  depletion
-  signature
-  reinstate
-  remainder
-  centuries
-  patronize
-  probative
-  eglantine
-  inelegant
-  antiserum
-  saintlier
-  epidermal
-  dreariest
-  numerical
-  cremation
-  tramlines
-  dissenter
-  tiredness
-  signature
-  factories
-  scenarios
-  serration
-  unspoiled
-  saturnine
-  insensate
-  nursemaid
-  antipodes
-  germinate
-  gaberdine
-  remission
-  deficient
-  pearliest
-  departure
-  amnesties
-  meatiness
-  fornicate
-  remission
-  pantihose
-  selection
-  essential
-  unspoiled
-  draftiest
-  coastline
-  sectional
-  inspector
-  selection
-  elastomer
-  dreariest
-  policeman
-  reuniting
-  transpose
-  probation
-  essential
-  appertain
-  esperanto
-  laundries
-  digestion
-  irateness
-  digestion
-  essential
-  veracious
-  grandiose
-  amplifier
-  antipodes
-  serration
-  resonance
-  greediest
-  indicator
-  imposture
-  coastline
-  sectional
-  greediest
-  remission
-  desertion
-  batteries
-  catteries
-  limestone
-  milestone
-  disrepute
-  disrepute
-  seduction
-  careerist
-  traceries
-  serration
-  careerist
-  traceries
-  bandolier
-  nursemaid
-  hindrance
-  caparison
-  advertise
-]
-
-# pp(check_q_c(first_sample))
-
 def initial_seed()
   letter_sets = mass_create_letter_sets
   number_sets = mass_create_number_sets
 end
 
-initial_seed
+class DicWord
+  @@length9 = []
+  @@length8 = []
+  @@length7 = []
+  @@length6 = []
+  @@length5 = []
+  @@length4 = []
+  @@length3 = []
+  @@length2 = []
+  @@all = []
+
+  def initialize(word, length)
+    @word = word
+    @length = length
+    @@all << self
+    if length == 9
+      @@length9 << self
+    elsif length == 8
+      @@length8 << self
+    elsif length == 7
+      @@length7 << self
+    elsif length == 6
+      @@length6 << self
+    elsif length == 5
+      @@length5 << self
+    elsif length == 4
+      @@length4 << self
+    elsif length == 3
+      @@length3 << self
+    elsif length == 2
+      @@length2 << self
+    end
+  end
+
+  def word
+    return @word
+  end
+
+  def self.all
+    return @@all
+  end
+
+  def self.nines
+    return @@length9
+  end
+
+  def self.eights
+    return @@length8
+  end
+
+  def self.sevens
+    return @@length7
+  end
+
+  def self.sixes
+    return @@length6
+  end
+
+  def self.fives
+    return @@length5
+  end
+
+  def self.fours
+    return @@length4
+  end
+
+  def self.threes
+    return @@length3
+  end
+
+  def self.twos
+    return @@length2
+  end
+end
+
+def find_all_letter_sets()
+  @dictionary.each { |word| DicWord.new(word, word.length) }
+  all_nines = DicWord.nines
+  successes = []
+  all_nines.each do |nine_lw|
+    counter = 0
+    eight_lws = []
+    seven_lws = []
+    six_lws = []
+    five_lws = []
+    four_lws = []
+    three_lws = []
+    two_lws = []
+    split = nine_lw.word.split('')
+    DicWord.eights.each do |eight_lw|
+      comp_split = eight_lw.word.split('')
+      if word_includes_letters?(comp_split, split)
+        eight_lws.push(eight_lw)
+      else
+        next
+      end
+    end
+    if eight_lws.length > 0
+      DicWord.sevens.each do |seven_lw|
+        comp_split = seven_lw.word.split('')
+        if word_includes_letters?(comp_split, split)
+          seven_lws.push(seven_lw.word)
+        else
+          next
+        end
+      end
+      if seven_lws.length > 0
+        DicWord.sixes.each do |six_lw|
+          comp_split = six_lw.word.split('')
+          if word_includes_letters?(comp_split, split)
+            six_lws.push(six_lw.word)
+          else
+            next
+          end
+        end
+        if six_lws.length > 0
+          DicWord.fives.each do |five_lw|
+            comp_split = five_lw.word.split('')
+            if word_includes_letters?(comp_split, split)
+              five_lws.push(five_lw.word)
+            else
+              next
+            end
+          end
+          if five_lws.length > 0
+            DicWord.fours.each do |four_lw|
+              comp_split = four_lw.word.split('')
+              if word_includes_letters?(comp_split, split)
+                four_lws.push(four_lw.word)
+              else
+                next
+              end
+            end
+            if four_lws.length > 0
+              DicWord.threes.each do |three_lw|
+                comp_split = three_lw.word.split('')
+                if word_includes_letters?(comp_split, split)
+                  three_lws.push(three_lw.word)
+                else
+                  next
+                end
+              end
+              if three_lws.length > 0
+                DicWord.twos.each do |two_lw|
+                  comp_split = two_lw.word.split('')
+                  if word_includes_letters?(comp_split, split)
+                    two_lws.push(two_lw.word)
+                  else
+                    next
+                  end
+                end
+                entry = {
+                  word: nine_lw.word,
+                  eights: eight_lws.uniq.length,
+                  sevens: seven_lws.uniq.length,
+                  sixes: six_lws.uniq.length,
+                  fives: five_lws.uniq.length,
+                  fours: four_lws.uniq.length,
+                  threes: three_lws.uniq.length,
+                  twos: two_lws.uniq.length,
+                }
+                successes.push(entry)
+                pp(nine_lw)
+                pp(eight_lws)
+                pp(seven_lws)
+                pp(six_lws)
+                pp(five_lws)
+                pp(four_lws)
+                next
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+  pp(successes.uniq)
+  pp(successes.uniq.length)
+end
+
+# find_all_letter_sets
+
+find_all_letter_sets
