@@ -431,10 +431,10 @@ end
 
 smart_create_target
 
-def mass_create_number_sets()
+def mass_create_number_sets(number)
   counter = 1
   sets = []
-  while counter <= 365
+  while counter <= number
     set = smart_create_target
     if sets.include?(set) == false
       sets.push(set)
@@ -955,3 +955,4 @@ end
 # find_all_letter_sets
 
 find_all_letter_sets
+mass_create_number_sets(722)
