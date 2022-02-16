@@ -445,7 +445,6 @@ def mass_create_number_sets(number)
       next
     end
   end
-  pp(sets)
 end
 
 # mass_create_number_sets
@@ -705,7 +704,7 @@ def find_all_letter_sets()
   all_nines = DicWord.nines
   successes = []
   db_counter = 1
-  all_nines.uniq.each do |nine_lw|
+  all_nines.uniq.shuffle.each do |nine_lw|
     counter = 0
     eight_lws = []
     seven_lws = []
@@ -719,7 +718,7 @@ def find_all_letter_sets()
       DicWord.eights.uniq.each do |eight_lw|
         comp_split = eight_lw.word.split('')
         if word_includes_letters?(comp_split, split)
-          eight_lws.push(eight_lw)
+          eight_lws.push(eight_lw.word)
         else
           next
         end
@@ -790,7 +789,8 @@ def find_all_letter_sets()
                   }
                   letter_set = LetterSet.create(letters: split.sort.join)
                   perfect_solution =
-                    LetterSolution.create(word: nine_lw.word, length: 9)
+                    LetterSolution.create(word: entry[:word], length: 9)
+                  letter_set.letter_solutions << perfect_solution
                   pp(db_counter)
                   pp(nine_lw)
                   db_counter = db_counter + 1
@@ -848,7 +848,7 @@ def populate_db()
   letter_sets = LetterSet.all.shuffle
   number_sets = NumberSet.all.shuffle
   counter = 0
-  while counter <= num_sets - 1
+  while counter <= total_sets - 1
     given_letter_set = letter_sets[counter]
     given_number_set = number_sets[counter]
     date = today + counter
