@@ -6,6 +6,8 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+require 'date'
+
 @bigs = [100, 75, 50, 25]
 @smalls = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 @big_options = [
@@ -612,31 +614,6 @@ parse_dictionary('./oxford_english_dictionary.txt')
 
 ######################################################################################
 
-# def spawn_letter_set()
-#   set = []
-#   number_of_vowels = @vowel_options.sample(1)[0]
-#   number_of_consonants = 9 - number_of_vowels
-#   vcounter = 1
-#   ccounter = 1
-#   while vcounter <= number_of_vowels
-#     given_vowel = @vowels.sample(1)[0]
-#     set.push(given_vowel)
-#     vcounter = vcounter + 1
-#   end
-#   while ccounter <= number_of_consonants
-#     given_cons = @consonants.sample(1)[0]
-#     set.push(given_cons)
-#     ccounter = ccounter + 1
-#   end
-#   if LetterSet.find_by(letters: set.join) == nil
-#     return set
-#   else
-#     spawn_letter_set
-#   end
-# end
-
-# s2 = spawn_letter_set
-
 def word_includes_letters?(word, letters)
   word.each do |given_letter|
     if letters.count(given_letter) == word.count(given_letter)
@@ -647,95 +624,6 @@ def word_includes_letters?(word, letters)
   end
   return true
 end
-
-# def create_letter_set_to_db(set)
-#   letters = set.join
-#   vowels = 0
-#   consonants = 0
-#   set.each do |given_letter|
-#     if given_letter == 'a' || given_letter == 'e' || given_letter == 'o' ||
-#          given_letter == 'i' || given_letter == 'u'
-#       vowels = vowels + 1
-#     end
-#   end
-#   letter_set =
-#     LetterSet.new(vowels: vowels, consonants: (9 - vowels), letters: letters)
-# end
-
-# def create_letter_solutions_to_db(letter_set, words)
-#   words.each do |given_word|
-#     solution =
-#       LetterSolution.create(word: given_word, length: given_word.length)
-#     letter_set.letter_solutions << solution
-#   end
-# end
-
-# def anagram_finder()
-#   set = spawn_letter_set
-#   letter_set = create_letter_set_to_db(set)
-#   twos = []
-#   threes = []
-#   fours = []
-#   fives = []
-#   sixes = []
-#   sevens = []
-#   eights = []
-#   nines = []
-#   @dictionary.each do |word|
-#     split = word.split('')
-#     if word_includes_letters?(split, set)
-#       if word.length == 2
-#         twos.push(word)
-#       elsif word.length == 3
-#         threes.push(word)
-#       elsif word.length == 4
-#         fours.push(word)
-#       elsif word.length == 5
-#         fives.push(word)
-#       elsif word.length == 6
-#         sixes.push(word)
-#       elsif word.length == 7
-#         sevens.push(word)
-#       elsif word.length == 8
-#         eights.push(word)
-#       elsif word.length == 9
-#         nines.push(word)
-#       end
-#     end
-#   end
-#   if sixes.length > 0 && sevens.length > 0 && eights.length > 0 &&
-#        nines.length > 0
-#     letter_set.save
-#     create_letter_solutions_to_db(letter_set, twos.uniq)
-#     create_letter_solutions_to_db(letter_set, threes.uniq)
-#     create_letter_solutions_to_db(letter_set, fours.uniq)
-#     create_letter_solutions_to_db(letter_set, fives.uniq)
-#     create_letter_solutions_to_db(letter_set, sixes.uniq)
-#     create_letter_solutions_to_db(letter_set, sevens.uniq)
-#     create_letter_solutions_to_db(letter_set, eights.uniq)
-#     create_letter_solutions_to_db(letter_set, nines.uniq)
-#   else
-#     anagram_finder
-#   end
-# end
-
-# anagram_finder
-
-# def mass_create_letter_sets()
-#   counter = 1
-#   sets = []
-#   while counter < 365
-#     set = spawn_letter_set
-#     matches = anagram_finder(set)
-#     if sets.include?(matches[:nines]) == false
-#       sets.push(matches[:nines])
-#       counter = counter + 1
-#     else
-#       next
-#     end
-#   end
-#   pp(sets)
-# end
 
 class DicWord
   @@length9 = []
@@ -952,7 +840,22 @@ def find_all_letter_sets()
   end
 end
 
-# find_all_letter_sets
+def populate_db()
+  today = Date.today
+  find_all_letter_sets
+  total_sets = LetterSet.all.length
+  mass_create_number_sets(total_sets)
+  letter_sets = LetterSet.all.shuffle
+  number_sets = NumberSet.all.shuffle
+  counter = 0
+  while counter <= num_sets - 1
+    given_letter_set = letter_sets[counter]
+    given_number_set = number_sets[counter]
+    date = today + counter
+    LetterGame.create(date: date, letter_set_id: given_letter_set[:id])
+    NumberGame.create(date: date, number_set_id: given_number_set[:id])
+    counter = counter + 1
+  end
+end
 
-find_all_letter_sets
-mass_create_number_sets(722)
+populate_db
