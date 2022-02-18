@@ -66,186 +66,6 @@ require 'date'
   6,
   6,
 ]
-# @vowels = %w[a e i o u]
-# @consonants = %w[b c d f g h j k l m n p q r s t v w x y z]
-@vowels = %w[
-  a
-  a
-  a
-  a
-  a
-  a
-  a
-  a
-  a
-  a
-  a
-  a
-  a
-  a
-  a
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  e
-  i
-  i
-  i
-  i
-  i
-  i
-  i
-  i
-  i
-  i
-  i
-  i
-  i
-  o
-  o
-  o
-  o
-  o
-  o
-  o
-  o
-  o
-  o
-  o
-  o
-  o
-  u
-  u
-  u
-  u
-  u
-]
-@consonants = %w[
-  b
-  b
-  c
-  c
-  c
-  d
-  d
-  d
-  d
-  d
-  d
-  f
-  f
-  g
-  g
-  g
-  h
-  h
-  j
-  k
-  l
-  l
-  l
-  l
-  l
-  m
-  m
-  m
-  m
-  n
-  n
-  n
-  n
-  n
-  n
-  n
-  n
-  p
-  p
-  p
-  p
-  q
-  r
-  r
-  r
-  r
-  r
-  r
-  r
-  r
-  r
-  s
-  s
-  s
-  s
-  s
-  s
-  s
-  s
-  s
-  t
-  t
-  t
-  t
-  t
-  t
-  t
-  t
-  t
-  v
-  w
-  x
-  y
-  z
-]
-@vowel_options = [
-  3,
-  3,
-  3,
-  3,
-  3,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  4,
-  5,
-  5,
-]
 
 ################## NUMBERS GAME ###################
 
@@ -446,8 +266,6 @@ def mass_create_number_sets(number)
     end
   end
 end
-
-# mass_create_number_sets
 
 ################# DICTIONARY ######################
 # Parsing OED txt file for a list of words:
@@ -859,3 +677,13 @@ def populate_db()
 end
 
 populate_db
+
+LetterGame.create(
+  date: Date.parse('1991-10-17'),
+  letter_set_id: LetterSet.last[:id],
+)
+
+NumberGame.create(
+  date: Date.parse('1991-10-17'),
+  number_set_id: NumberSet.last[:id],
+)
