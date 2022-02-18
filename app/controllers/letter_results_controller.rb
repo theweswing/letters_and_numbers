@@ -16,4 +16,15 @@ class LetterResultsController < ApplicationController
     result = LetterResult.find(params[:id])
     render json: result, status: :ok
   end
+
+  def create
+    result = LetterResult.create(letter_result_params)
+    render json: result, status: :created
+  end
+
+  private
+
+  def letter_result_params
+    params.permit(:user_id, :letter_game_id, :answer, :score)
+  end
 end

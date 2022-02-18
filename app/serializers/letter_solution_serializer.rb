@@ -1,3 +1,3 @@
 class LetterSolutionSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :word, :length
 end

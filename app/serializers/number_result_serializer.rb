@@ -1,3 +1,5 @@
 class NumberResultSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :answer, :score
+  belongs_to :user
+  belongs_to :number_game
 end

@@ -1,3 +1,3 @@
 class NumberSolutionSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :step, :solution
 end

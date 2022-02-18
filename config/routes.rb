@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   resources :users, only: %i[index show create update] do
     resources :letter_games, only: [:index]
-    resources :letter_results, only: %i[index create]
+    resources :letter_results, only: %i[index]
     resources :number_games, only: [:index]
     resources :number_results, only: %i[index]
   end
@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     resources :number_results, only: [:index]
   end
 
-  resources :number_results, only: %i[index show]
+  resources :number_results, only: %i[index show create]
 
   post '/signup', to: 'users#create'
   get '/me', to: 'users#show'
