@@ -12,6 +12,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { ThemeProvider } from '@emotion/react';
 
 function NavBar() {
   const [auth, setAuth] = useState(true);
