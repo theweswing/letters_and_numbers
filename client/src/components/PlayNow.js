@@ -7,15 +7,24 @@ import CalculateIcon from '@mui/icons-material/Calculate';
 import Divider from '@mui/material/Divider';
 
 function PlayNow(){
+
     useEffect(() => {
-        fetch("/letter_games")
-        .then((r) => {
-            r.json()
+        fetch(`/letter_games`)
+          .then((res) => res.json())
+          .then((game_data) => {
+            console.log(game_data);
+            let todaysGame = findTodaysGame(game_data)
+            console.log(todaysGame)
+          });
+      }, []);
+
+    function findTodaysGame(all_games){
+        let today = new Date().toISOString().slice(0, 10)
+        const todaysGame = all_games.filter((game) => {
+            return game.date == today
         })
-        .then((data) => {
-            console.log(data)
-        })
-    },[])
+        return todaysGame
+    }
     return (
         <>
             <Typography variant="h4" component="div" sx={{ flexGrow: 1, textAlign: "center", mt: 2}}>
