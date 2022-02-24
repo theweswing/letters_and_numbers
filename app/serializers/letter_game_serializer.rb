@@ -1,4 +1,4 @@
 class LetterGameSerializer < ActiveModel::Serializer
-  attributes :date
+  attributes :date, :id
   belongs_to :letter_set
 end

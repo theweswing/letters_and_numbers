@@ -1,18 +1,24 @@
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-function LetterTile({letter}){
+function LetterTile({letter, grabLetter}){
     const [clicked,setClicked]=useState(false)
 
-    function handleClick(){
-        setClicked(!clicked)
+    function handleClick(e){
+        if(e.target.value !== 0){
+        grabLetter(e)
+        setClicked(true)
+        console.log(e.target.value)
+        }
     }
 
     if(!clicked){
         return (
             <Button
             onClick={handleClick}
+            value={letter}
             sx={{
+                margin: .5,
                 width: 60,
                 height: 60,
                 variant: "contained",
@@ -35,7 +41,11 @@ function LetterTile({letter}){
         return (
             <Button
             onClick={handleClick}
+            value={0}
             sx={{
+                ml: .5,
+                mr: .5,
+                margin: .5,
                 width: 60,
                 height: 60,
                 variant: "contained",

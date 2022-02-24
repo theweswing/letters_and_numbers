@@ -6,6 +6,7 @@ import { ThemeProvider } from "@mui/material/styles"
 import { createTheme } from "@mui/material/styles"
 import LetterTile from "./LetterTile";
 import { Stack } from "@mui/material";
+import PlayLetters from "./PlayLetters";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -35,19 +36,17 @@ function App() {
     <>
     <ThemeProvider theme={theme}>
     <NavBar user={user}/>
-      <main>
+      <Switch>
+        <Route exact path="/">
         <PlayNow user={user} />
-          <Stack justifyContent="center" 
-            direction="row" spacing={2}>
-            <LetterTile letter={"L"} />
-            <LetterTile letter={"E"} />
-            <LetterTile letter={"T"} />
-            <LetterTile letter={"T"} />
-            <LetterTile letter={"E"} />
-            <LetterTile letter={"R"} />
-            <LetterTile letter={"S"} />
-              </Stack>
-      </main>
+        </Route>
+        <Route exact path ="/letters">
+        <PlayLetters />
+        </Route>
+        <Route path="*">
+        <PlayNow user={user} />
+        </Route>
+        </Switch>
       </ThemeProvider>
     </>
   );
