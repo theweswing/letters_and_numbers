@@ -17,18 +17,22 @@ function PlayLetters(){
     const [todaysLetters,setTodaysLetters] = useState(false)
     const [todaysSolutions,setTodaysSolutions] = useState(false)
     const [playerSolution,setPlayerSolution] = useState([])
+    const [hasReset,setHasReset] = useState(false)
 
     function grabLetter(e){
         console.log(e.target.value)
+        setHasReset(false)
         if(e.target.value !== "0"){
-            playerSolution.push(e.target.value)
+            setPlayerSolution([...playerSolution,e.target.value])
         }
         console.log(playerSolution)
     }
 
     function handleReset(){
         setPlayerSolution([])
-        setTodaysLetters([...todaysLetters])
+        let letters = [...todaysLetters]
+        setTodaysLetters(letters)
+        setHasReset(true)
     }
 
     useEffect(() => {
@@ -52,7 +56,12 @@ function PlayLetters(){
     function spawnLetterTiles(letters){
         if(letters){
             const letterTiles = letters.map((givenLetter) => {
-                return (<LetterTile letter={givenLetter.toUpperCase()} grabLetter={grabLetter}/>)
+                if (hasReset == false){
+                return (<LetterTile letter={givenLetter.toUpperCase()} grabLetter={grabLetter} reset={false}/>)
+                }
+                else if (hasReset == true){
+                    return (<LetterTile letter={givenLetter.toUpperCase()} grabLetter={grabLetter} reset={true}/>)
+                }
             })
             return letterTiles
         }

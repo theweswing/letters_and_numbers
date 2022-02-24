@@ -1,8 +1,15 @@
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-function LetterTile({letter, grabLetter}){
+function LetterTile({letter, grabLetter,reset}){
     const [clicked,setClicked]=useState(false)
+
+    useEffect(() => {
+        if(reset == true){
+            setClicked(false)
+        }
+    })
+
 
     function handleClick(e){
         if(e.target.value !== 0){
@@ -40,6 +47,7 @@ function LetterTile({letter, grabLetter}){
     else if(clicked){
         return (
             <Button
+            disabled
             onClick={handleClick}
             value={0}
             sx={{
