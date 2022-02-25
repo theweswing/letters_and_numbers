@@ -41,7 +41,7 @@ function App() {
         <PlayNow user={user} />
         </Route>
         <Route exact path ="/letters">
-        <PlayLetters />
+        <PlayLetters user={user}/>
         </Route>
         <Route path="*">
         <PlayNow user={user} />

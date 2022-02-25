@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :letter_sets, only: %i[index show] do
-    resources :letter_solutions, only: [:index]
+    resources :letter_solutions, only: %i[index create]
   end
 
   resources :letter_solutions, only: :index

@@ -12,7 +12,7 @@ import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import PlayersWord from "./PlayersWord";
 
-function PlayLetters(){
+function PlayLetters({user}){
     const [todaysGame,setTodaysGame] = useState(false)
     const [todaysLetters,setTodaysLetters] = useState(false)
     const [todaysSolutions,setTodaysSolutions] = useState(false)
@@ -35,12 +35,89 @@ function PlayLetters(){
         setHasReset(true)
     }
 
+    function handleSubmit(e){
+        e.preventDefault()
+        fetch(`/letter_sets/${todaysGame.letter_set.id}/letter_solutions`)
+                .then((r) => {
+                  if (r.ok) {
+                    r.json()
+                    .then((data) => {
+                        console.log(data[0])
+                        console.log(playerSolution.join(""))
+                        if(wordListIncludes(playerSolution.join(""),data) == false){
+                            checkAgainstDictionaryAPI(playerSolution.join(""),user)
+                        }
+                        
+                    })
+                    }})
+    }
+
+    function wordListIncludes(answer,wordList){
+        console.log(wordList)
+        console.log(wordList[0])
+        let words = []
+        let wordMap = wordList.map((givenWord) => {
+            words.push(givenWord.word.toUpperCase())
+        })
+        let uniqueWords = [...new Set(words)]
+        let listedWords = Array.from(uniqueWords)
+        console.log(listedWords)
+        console.log(answer)
+        if (listedWords.includes(answer)){
+            console.log(true)
+            return true
+        }
+        else {
+            console.log(false)
+            return false
+        }
+    }
+
+    function checkAgainstDictionaryAPI(answer,user){
+        fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${answer}`)
+                .then((r) => {
+                  if (r.ok) {
+                    r.json()
+                    .then((data) => {
+                        console.log(data)
+                        let entry = {
+                            word: data[0].word,
+                            length: data[0].word.length
+                        }
+                        fetch(`letter_sets/${todaysGame.letter_set.id}/letter_solutions`, {
+                        method: "POST",
+                        headers: {
+                        "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(entry),
+                        })
+                        .then((res) => {
+                            if (res.ok) {
+                                res.json()
+                                    .then((newWordInDB) => {
+                                        console.log(newWordInDB)
+                                        return true;
+                                    });
+                            } 
+                            else {
+                                res.json()
+                                .then((errors) => {
+                                    console.log(errors)
+                                    return false
+                                });
+                            }
+                        })
+                    })
+                }})
+    }
+
     useEffect(() => {
         fetch(`/letter_games`)
           .then((res) => res.json())
           .then((gameData) => {
             let dailyGame = findTodaysGame(gameData)
             setTodaysGame(dailyGame[0])
+            console.log(dailyGame[0])
             setTodaysLetters(dailyGame[0].letter_set.letters.split(""))
           });
       }, []);
@@ -93,7 +170,7 @@ function PlayLetters(){
                 {spawnLetterTiles(todaysLetters)}
             </Grid>
             <Grid item xs={12} sx={{ mt: 3, mb: 2 }} align="center"> 
-                <Button variant="contained" color="primary">
+                <Button onClick={handleSubmit} type="submit" variant="contained" color="primary">
                     Submit
                 </Button>
             </Grid>

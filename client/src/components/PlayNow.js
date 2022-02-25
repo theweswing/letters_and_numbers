@@ -6,7 +6,7 @@ import AbcIcon from '@mui/icons-material/Abc';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import Divider from '@mui/material/Divider';
 
-function PlayNow(){
+function PlayNow({user}){
 
     // useEffect(() => {
     //     fetch(`/letter_games`)

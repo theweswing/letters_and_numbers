@@ -60,12 +60,11 @@ function LetterTile({letter, grabLetter,reset}){
                 width: 60,
                 height: 60,
                 variant: "contained",
-                color: "white",
                 fontSize:"large",
-                '&:hover': {
-        backgroundColor: '#BD0A01',
-        boxShadow: 'none',
-      }
+    //             '&:hover': {
+    //     backgroundColor: '#BD0A01',
+    //     boxShadow: 'none',
+    //   }
             }}
             >
             {letter}
