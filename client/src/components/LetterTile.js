@@ -24,6 +24,7 @@ function LetterTile({letter, grabLetter,reset}){
             <Button
             onClick={handleClick}
             value={letter}
+            variant="contained"
             sx={{
                 margin: .5,
                 width: 60,
@@ -50,6 +51,8 @@ function LetterTile({letter, grabLetter,reset}){
             disabled
             onClick={handleClick}
             value={0}
+            color="error"
+            variant="contained"
             sx={{
                 ml: .5,
                 mr: .5,
@@ -58,7 +61,6 @@ function LetterTile({letter, grabLetter,reset}){
                 height: 60,
                 variant: "contained",
                 color: "white",
-                backgroundColor: "red",
                 fontSize:"large",
                 '&:hover': {
         backgroundColor: '#BD0A01',

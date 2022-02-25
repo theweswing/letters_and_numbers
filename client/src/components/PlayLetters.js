@@ -84,16 +84,21 @@ function PlayLetters(){
           <Grid item xs={12} sx={{ mt: 3, mb: 2 }} align="center"> 
                 <PlayersWord usedLetters={playerSolution}></PlayersWord>
             </Grid>
+            <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+                <Typography variant="subtitle1">
+                    {playerSolution} ({playerSolution.length} letters)
+                </Typography>
+            </Grid>
             <Grid item xs={12} sx={{ mt: 3, mb: 2 }} align="center"> 
                 {spawnLetterTiles(todaysLetters)}
             </Grid>
             <Grid item xs={12} sx={{ mt: 3, mb: 2 }} align="center"> 
-                <Button variant="contained">
+                <Button variant="contained" color="primary">
                     Submit
                 </Button>
             </Grid>
             <Grid item xs={12} sx={{ mt: 3, mb: 2 }} align="center"> 
-                <Button variant="contained" sx={{backgroundColor:"red"}} onClick={handleReset}>
+                <Button variant="contained" color="error" onClick={handleReset}>
                     Reset
                 </Button>
             </Grid>
