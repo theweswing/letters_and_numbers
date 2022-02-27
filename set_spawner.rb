@@ -852,3 +852,8 @@ end
 find_all_letter_sets
 
 require ‘date’
+
+#https://www.twilio.com/blog/2015/10/4-ways-to-parse-a-json-api-with-ruby.html
+
+#Fetch existing Word DB with S's attached to each word at external API
+#Add any that come abck as valid words and any derivatives that dictionary API has and I don't
