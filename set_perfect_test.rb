@@ -164,14 +164,19 @@ response = Net::HTTP.get(uri)
 # pp(JSON.parse(response)[0]['word'])
 
 def perfect_dictionary
-  @dictionary.each do |given_word|
+  pp(@dictionary.uniq.length)
+  @dictionary.uniq.each do |given_word|
+    sleep(1)
     url = "https://api.dictionaryapi.dev/api/v2/entries/en/#{given_word}s"
     uri = URI(url)
     response = Net::HTTP.get(uri)
     if (response['title'])
+      pp('fail')
       #   word = JSON.parse(response)[0]['word']
       #   @dictionary.push(word)
     else
+      pp(given_word)
+      pp(response)
       pp(retrieve_word(response))
 
       #   @dictionary.push(retrieve_word(response))
@@ -185,7 +190,9 @@ def retrieve_word(entry)
     # word_line = entry.split(':')[1].split(',')[0]
     # word_line.delete!('"')
     # word_line.gsub(%r{\/}, '')
-    pp(entry.split(':'))
+    pp(entry.split(':')[1])
+  elsif (entry.split(':')[1] == nil)
+    pp(entry)
   end
   #   return word_line
 end

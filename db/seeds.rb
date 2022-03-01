@@ -461,7 +461,7 @@ def retrieve_word(entry)
 end
 
 parse_dictionary('./oxford_english_dictionary.txt')
-perfect_dictionary
+# perfect_dictionary
 
 ######################################################################################
 
@@ -643,8 +643,7 @@ def find_all_letter_sets()
                   perfect_solution =
                     LetterSolution.create(word: entry[:word], length: 9)
                   letter_set.letter_solutions << perfect_solution
-                  pp(db_counter)
-                  pp(nine_lw)
+                  pp(nine_lw.word)
                   db_counter = db_counter + 1
                   eight_lws.each do |eight_lw|
                     letter_solution =
@@ -690,6 +689,7 @@ def find_all_letter_sets()
       end
     end
   end
+  pp(LetterSet.all.length)
 end
 
 def populate_db()

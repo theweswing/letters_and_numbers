@@ -42,33 +42,36 @@ function PlayLetters({user}){
                   if (r.ok) {
                     r.json()
                     .then((data) => {
-                        console.log(data[0])
+                        console.log("perfect solution:")
+                        console.log(data[0].word)
+                        console.log("player solution:")
                         console.log(playerSolution.join(""))
                         if(wordListIncludes(playerSolution.join(""),data) == false){
                             checkAgainstDictionaryAPI(playerSolution.join(""),user)
                         }
-                        
+                        else if(user) {
+                            saveUserAnswer(playerSolution.join(""),user)
+                        }
+                        else if(!user){
+                            saveAnswerSession(playerSolution.join(""))
+                        }
                     })
                     }})
     }
 
     function wordListIncludes(answer,wordList){
-        console.log(wordList)
-        console.log(wordList[0])
         let words = []
         let wordMap = wordList.map((givenWord) => {
             words.push(givenWord.word.toUpperCase())
         })
         let uniqueWords = [...new Set(words)]
         let listedWords = Array.from(uniqueWords)
-        console.log(listedWords)
-        console.log(answer)
         if (listedWords.includes(answer)){
-            console.log(true)
+            console.log(`${answer} found in Solutions DB. Next step: Saving answer.`)
             return true
         }
         else {
-            console.log(false)
+            console.log(`${answer} not found in Solutions DB. Next step: Checking external dictionary.`)
             return false
         }
     }
@@ -96,7 +99,12 @@ function PlayLetters({user}){
                                 res.json()
                                     .then((newWordInDB) => {
                                         console.log(newWordInDB)
-                                        return true;
+                                        if(user){
+                                            saveUserAnswer(answer,user)
+                                        }
+                                        if(!user){
+                                            saveAnswerSession(answer)
+                                        }
                                     });
                             } 
                             else {
@@ -108,8 +116,76 @@ function PlayLetters({user}){
                             }
                         })
                     })
-                }})
+                }
+            else {
+                console.log(`${answer}: Word not found in internal or external dictionaries`)
+                console.log("Player will be scored a friendly 2 points.")
+
+            }})
+                
     }
+
+    function saveUserAnswer(answer,user){
+        let entry = {
+            user_id: user.id,
+            letter_game_id: todaysGame.id,
+            answer: answer,
+            score: answer.length
+        }
+        console.log(entry)
+    }
+
+    function saveAnswerSession(answer){
+        let entry = {
+            date: new Date().toISOString().slice(0, 10),
+            letter_game_id: todaysGame.id,
+            answer: answer,
+            score: answer.length
+        }
+        fetch("/savegame", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(entry),
+          }).then((res) => {
+            if (res.ok) {
+              res.json().then((data) => console.log(data));
+            } else {
+              res.json().then((errors) => console.log(errors));
+            }
+          });
+        }
+
+    function saveUserBadAnswer(answer,user){
+        let entry = {
+            user_id: user.id,
+            letter_game_id: todaysGame.id,
+            answer: answer,
+            score: 2
+        }
+        console.log(entry)
+    }
+
+    function saveBadAnswerSession(answer){
+        let entry = {
+            date: new Date().toISOString().slice(0, 10),
+            letter_game_id: todaysGame.id,
+            answer: answer,
+            score: 2
+        }
+        fetch("/savegame", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(entry),
+          }).then((res) => {
+            if (res.ok) {
+              res.json().then((data) => console.log(data));
+            } else {
+              res.json().then((errors) => console.log(errors));
+            }
+          });
+        }
+
+
 
     useEffect(() => {
         fetch(`/letter_games`)
