@@ -5,10 +5,10 @@ function LetterTile({letter, grabLetter,reset}){
     const [clicked,setClicked]=useState(false)
 
     useEffect(() => {
-        if(reset == true){
+        if(reset === true){
             setClicked(false)
         }
-    })
+    },)
 
 
     function handleClick(e){

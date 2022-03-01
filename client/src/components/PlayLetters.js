@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
-import NavBar from "./NavBar";
-import PlayNow from "./PlayNow";
-import { ThemeProvider } from "@mui/material/styles"
-import { createTheme } from "@mui/material/styles"
 import LetterTile from "./LetterTile";
-import { Stack } from "@mui/material";
 import { Box } from "@mui/system";
 import { Grid } from "@mui/material";
 import { Typography } from "@mui/material";
@@ -18,6 +12,27 @@ function PlayLetters({user}){
     const [todaysSolutions,setTodaysSolutions] = useState(false)
     const [playerSolution,setPlayerSolution] = useState([])
     const [hasReset,setHasReset] = useState(false)
+
+    useEffect(() => {
+        fetch(`/letter_games`)
+          .then((res) => res.json())
+          .then((gameData) => {
+            let dailyGame = findTodaysGame(gameData)
+            setTodaysGame(dailyGame[0])
+            console.log(dailyGame[0])
+            setTodaysLetters(dailyGame[0].letter_set.letters.split(""))
+          });
+      }, []);
+
+      
+    
+    function findTodaysGame(allGames){
+        let today = new Date().toISOString().slice(0, 10)
+        const todaysGame = allGames.filter((game) => {
+            return game.date === today
+        })
+        return todaysGame
+    }
 
     function grabLetter(e){
         console.log(e.target.value)
@@ -35,6 +50,8 @@ function PlayLetters({user}){
         setHasReset(true)
     }
 
+
+
     function handleSubmit(e){
         e.preventDefault()
         fetch(`/letter_sets/${todaysGame.letter_set.id}/letter_solutions`)
@@ -46,11 +63,11 @@ function PlayLetters({user}){
                         console.log(data[0].word)
                         console.log("player solution:")
                         console.log(playerSolution.join(""))
-                        if(wordListIncludes(playerSolution.join(""),data) == false){
+                        if(wordListIncludes(playerSolution.join(""),data) === false){
                             checkAgainstDictionaryAPI(playerSolution.join(""),user)
                         }
                         else if(user) {
-                            saveUserAnswer(playerSolution.join(""),user)
+                            saveAnswerUser(playerSolution.join(""),user)
                         }
                         else if(!user){
                             saveAnswerSession(playerSolution.join(""))
@@ -100,7 +117,7 @@ function PlayLetters({user}){
                                     .then((newWordInDB) => {
                                         console.log(newWordInDB)
                                         if(user){
-                                            saveUserAnswer(answer,user)
+                                            saveAnswerUser(answer,user)
                                         }
                                         if(!user){
                                             saveAnswerSession(answer)
@@ -117,22 +134,57 @@ function PlayLetters({user}){
                         })
                     })
                 }
-            else {
+            else if (user) {
                 console.log(`${answer}: Word not found in internal or external dictionaries`)
                 console.log("Player will be scored a friendly 2 points.")
-
-            }})
+                saveBadAnswerUser(answer,user)
+            }
+        else if (!user) {
+            console.log(`${answer}: Word not found in internal or external dictionaries`)
+            console.log("Player will be scored a friendly 2 points.")
+            saveBadAnswerSession(answer)
+        }})
                 
     }
 
-    function saveUserAnswer(answer,user){
+    function saveAnswerUser(answer,user){
         let entry = {
             user_id: user.id,
             letter_game_id: todaysGame.id,
             answer: answer,
             score: answer.length
         }
-        console.log(entry)
+        fetch("/letter_results", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(entry),
+          }).then((res) => {
+            if (res.ok) {
+              res.json().then((data) => console.log(data));
+            } else {
+              res.json().then((errors) => console.log(errors));
+            }
+          });
+    }
+
+    function saveBadAnswerUser(answer,user){
+        let entry = {
+            user_id: user.id,
+            letter_game_id: todaysGame.id,
+            answer: answer,
+            score: 2
+        }
+        fetch("/letter_results", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(entry),
+          }).then((res) => {
+            if (res.ok) {
+              res.json().then((data) => console.log(data));
+            } else {
+              res.json().then((errors) => console.log(errors));
+            }
+          });
     }
 
     function saveAnswerSession(answer){
@@ -142,6 +194,7 @@ function PlayLetters({user}){
             answer: answer,
             score: answer.length
         }
+        console.log(entry.date)
         fetch("/savegame", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -154,16 +207,6 @@ function PlayLetters({user}){
             }
           });
         }
-
-    function saveUserBadAnswer(answer,user){
-        let entry = {
-            user_id: user.id,
-            letter_game_id: todaysGame.id,
-            answer: answer,
-            score: 2
-        }
-        console.log(entry)
-    }
 
     function saveBadAnswerSession(answer){
         let entry = {
@@ -187,41 +230,29 @@ function PlayLetters({user}){
 
 
 
-    useEffect(() => {
-        fetch(`/letter_games`)
-          .then((res) => res.json())
-          .then((gameData) => {
-            let dailyGame = findTodaysGame(gameData)
-            setTodaysGame(dailyGame[0])
-            console.log(dailyGame[0])
-            setTodaysLetters(dailyGame[0].letter_set.letters.split(""))
-          });
-      }, []);
     
-    function findTodaysGame(allGames){
-        let today = new Date().toISOString().slice(0, 10)
-        const todaysGame = allGames.filter((game) => {
-            return game.date == today
-        })
-        return todaysGame
-    }
     
     function spawnLetterTiles(letters){
         if(letters){
+            let counter = 1
             const letterTiles = letters.map((givenLetter) => {
-                if (hasReset == false){
-                return (<LetterTile letter={givenLetter.toUpperCase()} grabLetter={grabLetter} reset={false}/>)
+                if (hasReset === false){
+                    counter +=1
+                return (<LetterTile key={counter} letter={givenLetter.toUpperCase()} grabLetter={grabLetter} reset={false}/>)
                 }
-                else if (hasReset == true){
-                    return (<LetterTile letter={givenLetter.toUpperCase()} grabLetter={grabLetter} reset={true}/>)
+                else if (hasReset === true){
+                    counter +=1
+                    return (<LetterTile key={counter} letter={givenLetter.toUpperCase()} grabLetter={grabLetter} reset={true}/>)
                 }
             })
             return letterTiles
         }
         else{
+            let counter = 1
             const loading = "LOADING..".split("")
             const letterTiles = loading.map((givenLetter) => {
-                return (<LetterTile letter={givenLetter} grabLetter={grabLetter}/> )
+                counter +=1
+                return (<LetterTile key={counter} letter={givenLetter} grabLetter={grabLetter}/> )
             })
             return letterTiles
         }

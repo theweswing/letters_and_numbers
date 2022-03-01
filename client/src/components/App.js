@@ -4,8 +4,6 @@ import NavBar from "./NavBar";
 import PlayNow from "./PlayNow";
 import { ThemeProvider } from "@mui/material/styles"
 import { createTheme } from "@mui/material/styles"
-import LetterTile from "./LetterTile";
-import { Stack } from "@mui/material";
 import PlayLetters from "./PlayLetters";
 
 function App() {
@@ -15,10 +13,30 @@ function App() {
     // auto-login
     fetch("/me").then((r) => {
       if (r.ok) {
-        r.json().then((user) => setUser(user));
+        r.json().then((user) => {
+          console.log(user)
+          setUser(user)
+        });
+      }
+      else {
+        createUser()
       }
     });
   }, []);
+
+  function createUser(){
+    fetch(`/users`, {
+      method: "POST",
+      headers: {
+      "Content-Type": "application/json",
+      },
+      })
+    .then((r) => r.json())
+    .then((newUser) => {
+        console.log(newUser)
+        setUser(newUser)
+    })
+  }
 
   let theme = createTheme({
     palette: {

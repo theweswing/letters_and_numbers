@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
-import NavBar from "./NavBar";
-import PlayNow from "./PlayNow";
-import { ThemeProvider } from "@mui/material/styles"
-import { createTheme } from "@mui/material/styles"
 import LetterTile from "./LetterTile";
-import { Stack } from "@mui/material";
-import { Box } from "@mui/system";
 import { Grid } from "@mui/material";
-import { Typography } from "@mui/material";
-import { Divider } from "@mui/material";
 import { Button } from "@mui/material";
 
 function PlayersWord({usedLetters}){
@@ -24,7 +15,7 @@ function PlayersWord({usedLetters}){
         let usedLetterTiles = lettersInUse.map((givenLetter) => {
             counter +=1
             return (
-                <Grid item xs={1}>
+                <Grid item xs={1} key={`${counter} ${givenLetter}`}>
                 <Button
                     sx={{
                     variant: "contained",
@@ -45,7 +36,7 @@ function PlayersWord({usedLetters}){
         })
         while (counter <= 8){
             usedLetterTiles.push(
-                <Grid item xs={1} alignItems="center" justifyContent="center">
+                <Grid item xs={1} alignItems="center" justifyContent="center" key={counter}>
                 <Button
                 sx={{
                 variant: "contained",

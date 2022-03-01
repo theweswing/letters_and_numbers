@@ -7,15 +7,10 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { ThemeProvider } from '@emotion/react';
 
 function NavBar() {
-  const [auth, setAuth] = useState(true);
   const [rightAnchor, setRightAnchor] = useState(null);
   const [leftAnchor, setLeftAnchor] = useState(false)
 
@@ -98,6 +93,7 @@ function handleLeftClose(){
               >
                 <MenuItem onClick={handleRightClose}>Register</MenuItem>
                 <MenuItem onClick={handleRightClose}>Log In</MenuItem>
+                <MenuItem onClick={handleRightClose}>My Games</MenuItem>
               </Menu>
             </div>
         </Toolbar>

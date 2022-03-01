@@ -1,4 +1,4 @@
-import {useState,useEffect} from 'react'
+// import {useState,useEffect} from 'react'
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -18,13 +18,16 @@ function PlayNow({user}){
     //       });
     //   }, []);
 
-    function findTodaysGame(all_games){
-        let today = new Date().toISOString().slice(0, 10)
-        const todaysGame = all_games.filter((game) => {
-            return game.date == today
-        })
-        return todaysGame
-    }
+    // function findTodaysGame(all_games){
+    //     let today = new Date().toISOString().slice(0, 10)
+    //     const todaysGame = all_games.filter((game) => {
+    //         return game.date == today
+    //     })
+    //     return todaysGame
+    // }
+
+    
+
     return (
         <>
             <Typography variant="h4" component="div" sx={{ flexGrow: 1, textAlign: "center", mt: 2}}>

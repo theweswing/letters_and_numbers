@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :profiles
   resources :letter_sets, only: %i[index show] do
     resources :letter_solutions, only: %i[index create]
   end
@@ -16,6 +17,7 @@ Rails.application.routes.draw do
     resources :letter_results, only: %i[index]
     resources :number_games, only: [:index]
     resources :number_results, only: %i[index]
+    resources :profiles, only: %i[index create]
   end
 
   resources :number_sets, only: %i[index show] do
@@ -30,7 +32,7 @@ Rails.application.routes.draw do
 
   post '/signup', to: 'users#create'
   get '/me', to: 'users#show'
-  post '/login', to: 'sessions#create'
+  post '/login', to: 'sessions#login'
   post '/savegame', to: 'sessions#save'
   delete '/logout', to: 'sessions#destroy'
 
