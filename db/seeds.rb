@@ -427,7 +427,41 @@ def valid_word(word)
   end
 end
 
+require 'net/http'
+require 'json'
+
+# url = 'https://api.dictionaryapi.dev/api/v2/entries/en/hello'
+# uri = URI(url)
+# response = Net::HTTP.get(uri)
+# pp(JSON.parse(response)[0]['word'])
+
+def perfect_dictionary
+  @dictionary.each do |given_word|
+    url = "https://api.dictionaryapi.dev/api/v2/entries/en/#{given_word}s"
+    uri = URI(url)
+    response = Net::HTTP.get(uri)
+    if (response['title'])
+      pp('fail')
+      #   word = JSON.parse(response)[0]['word']
+      #   @dictionary.push(word)
+    else
+      pp(retrieve_word(response))
+      @dictionary.push(retrieve_word(response))
+      next
+    end
+  end
+  pp(@dictionary)
+end
+
+def retrieve_word(entry)
+  word_line = entry.split(':')[1].split(',')[0]
+  word_line.delete!('"')
+  word_line.gsub(%r{\/}, '')
+  return word_line
+end
+
 parse_dictionary('./oxford_english_dictionary.txt')
+perfect_dictionary
 
 ######################################################################################
 
