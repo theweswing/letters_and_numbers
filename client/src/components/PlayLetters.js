@@ -17,7 +17,7 @@ function PlayLetters({user}){
     const [seconds,setSeconds] = useState(30)
     const [submittedAnswer,setSubmittedAnswer] = useState("")
     const [toggleRules,setToggleRules] = useState(false)
-    let playerAnswer=""
+
     useEffect(() => {
         fetch(`/letter_games`)
           .then((res) => res.json())
@@ -38,36 +38,33 @@ function PlayLetters({user}){
             setSeconds(totalSeconds);
             }
             if (totalSeconds == 0) {
-                feedback()
-                setSeconds(false)
                 totalSeconds =  10000
+                setSeconds(10000)
             }
         }
         return () => {
-            console.log(submittedAnswer)
             clearInterval(timeInterval)
         }
     
 }, [])
 
+    if(seconds==10000){
+        console.log("hi")
+        console.log(submittedAnswer)
+        handleSubmit()
+        setSeconds(false)
+    }
+
     function handleRules(){
     setToggleRules(!toggleRules)
     }
 
-    function feedback(){
-        console.log("Out of time")
-        console.log(`player solution state: ${playerSolution}`)
-        console.log(`player answer variable: ${playerAnswer}`)
-    }
-
     function handleSubmittedAnswer(){
+        if(playerSolution.length > 0){
         setSubmittedAnswer(playerSolution.join(""))
         console.log(submittedAnswer)
-        setSubmittedAnswer(playerSolution.join(""))
-        console.log(submittedAnswer)
-        playerAnswer = playerSolution.join("")
-        console.log(playerAnswer)
-        // handleReset()
+        handleReset()
+        }
     }
     
     function findTodaysGame(allGames){
@@ -94,8 +91,7 @@ function PlayLetters({user}){
         setHasReset(true)
     }
 
-    function handleSubmit(e){
-        e.preventDefault()
+    function handleSubmit(){
         fetch(`/letter_sets/${todaysGame.letter_set.id}/letter_solutions`)
                 .then((r) => {
                   if (r.ok) {
@@ -104,12 +100,12 @@ function PlayLetters({user}){
                         console.log("perfect solution:")
                         console.log(data[0].word)
                         console.log("player solution:")
-                        console.log(playerSolution.join(""))
-                        if(wordListIncludes(playerSolution.join(""),data) === false){
-                            checkAgainstDictionaryAPI(playerSolution.join(""),user)
+                        console.log(submittedAnswer)
+                        if(wordListIncludes(submittedAnswer,data) === false){
+                            checkAgainstDictionaryAPI(submittedAnswer,user)
                         }
                         else{
-                            saveAnswer(playerSolution.join(""),user)
+                            saveAnswer(submittedAnswer,user)
                         }
                     })
                     }})
