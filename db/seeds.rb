@@ -557,130 +557,135 @@ def find_all_letter_sets()
   successes = []
   db_counter = 1
   all_nines.uniq.shuffle.each do |nine_lw|
-    counter = 0
-    eight_lws = []
-    seven_lws = []
-    six_lws = []
-    five_lws = []
-    four_lws = []
-    three_lws = []
-    two_lws = []
-    split = nine_lw.word.split('')
-    if LetterSet.find_by(letters: split.sort.join) == nil
-      DicWord.eights.uniq.each do |eight_lw|
-        comp_split = eight_lw.word.split('')
-        if word_includes_letters?(comp_split, split)
-          eight_lws.push(eight_lw.word)
-        else
-          next
-        end
-      end
-      if eight_lws.length > 0
-        DicWord.sevens.uniq.each do |seven_lw|
-          comp_split = seven_lw.word.split('')
+    if nine_lw.word == 'cambridge' || nine_lw.word == 'eldorados' ||
+         nine_lw.word == 'niggardly' || nine_lw.word == 'icelander'
+      next
+    else
+      counter = 0
+      eight_lws = []
+      seven_lws = []
+      six_lws = []
+      five_lws = []
+      four_lws = []
+      three_lws = []
+      two_lws = []
+      split = nine_lw.word.split('')
+      if LetterSet.find_by(letters: split.sort.join) == nil
+        DicWord.eights.uniq.each do |eight_lw|
+          comp_split = eight_lw.word.split('')
           if word_includes_letters?(comp_split, split)
-            seven_lws.push(seven_lw.word)
+            eight_lws.push(eight_lw.word)
           else
             next
           end
         end
-        if seven_lws.length > 0
-          DicWord.sixes.uniq.each do |six_lw|
-            comp_split = six_lw.word.split('')
+        if eight_lws.length > 0
+          DicWord.sevens.uniq.each do |seven_lw|
+            comp_split = seven_lw.word.split('')
             if word_includes_letters?(comp_split, split)
-              six_lws.push(six_lw.word)
+              seven_lws.push(seven_lw.word)
             else
               next
             end
           end
-          if six_lws.length > 0
-            DicWord.fives.uniq.each do |five_lw|
-              comp_split = five_lw.word.split('')
+          if seven_lws.length > 0
+            DicWord.sixes.uniq.each do |six_lw|
+              comp_split = six_lw.word.split('')
               if word_includes_letters?(comp_split, split)
-                five_lws.push(five_lw.word)
+                six_lws.push(six_lw.word)
               else
                 next
               end
             end
-            if five_lws.length > 0
-              DicWord.fours.uniq.each do |four_lw|
-                comp_split = four_lw.word.split('')
+            if six_lws.length > 0
+              DicWord.fives.uniq.each do |five_lw|
+                comp_split = five_lw.word.split('')
                 if word_includes_letters?(comp_split, split)
-                  four_lws.push(four_lw.word)
+                  five_lws.push(five_lw.word)
                 else
                   next
                 end
               end
-              if four_lws.length > 0
-                DicWord.threes.uniq.each do |three_lw|
-                  comp_split = three_lw.word.split('')
+              if five_lws.length > 0
+                DicWord.fours.uniq.each do |four_lw|
+                  comp_split = four_lw.word.split('')
                   if word_includes_letters?(comp_split, split)
-                    three_lws.push(three_lw.word)
+                    four_lws.push(four_lw.word)
                   else
                     next
                   end
                 end
-                if three_lws.length > 0
-                  DicWord.twos.uniq.each do |two_lw|
-                    comp_split = two_lw.word.split('')
+                if four_lws.length > 0
+                  DicWord.threes.uniq.each do |three_lw|
+                    comp_split = three_lw.word.split('')
                     if word_includes_letters?(comp_split, split)
-                      two_lws.push(two_lw.word)
+                      three_lws.push(three_lw.word)
                     else
                       next
                     end
                   end
-                  entry = {
-                    word: nine_lw.word,
-                    eights: eight_lws.uniq.length,
-                    sevens: seven_lws.uniq.length,
-                    sixes: six_lws.uniq.length,
-                    fives: five_lws.uniq.length,
-                    fours: four_lws.uniq.length,
-                    threes: three_lws.uniq.length,
-                    twos: two_lws.uniq.length,
-                  }
-                  letter_set = LetterSet.create(letters: split.sort.join)
-                  perfect_solution =
-                    LetterSolution.create(word: entry[:word], length: 9)
-                  letter_set.letter_solutions << perfect_solution
-                  pp(nine_lw.word)
-                  db_counter = db_counter + 1
-                  eight_lws.each do |eight_lw|
-                    letter_solution =
-                      LetterSolution.create(word: eight_lw, length: 8)
-                    letter_set.letter_solutions << letter_solution
+                  if three_lws.length > 0
+                    DicWord.twos.uniq.each do |two_lw|
+                      comp_split = two_lw.word.split('')
+                      if word_includes_letters?(comp_split, split)
+                        two_lws.push(two_lw.word)
+                      else
+                        next
+                      end
+                    end
+                    entry = {
+                      word: nine_lw.word,
+                      eights: eight_lws.uniq.length,
+                      sevens: seven_lws.uniq.length,
+                      sixes: six_lws.uniq.length,
+                      fives: five_lws.uniq.length,
+                      fours: four_lws.uniq.length,
+                      threes: three_lws.uniq.length,
+                      twos: two_lws.uniq.length,
+                    }
+                    letter_set = LetterSet.create(letters: split.sort.join)
+                    perfect_solution =
+                      LetterSolution.create(word: entry[:word], length: 9)
+                    letter_set.letter_solutions << perfect_solution
+                    pp(nine_lw.word)
+                    db_counter = db_counter + 1
+                    eight_lws.each do |eight_lw|
+                      letter_solution =
+                        LetterSolution.create(word: eight_lw, length: 8)
+                      letter_set.letter_solutions << letter_solution
+                    end
+                    seven_lws.each do |seven_lw|
+                      letter_solution =
+                        LetterSolution.create(word: seven_lw, length: 7)
+                      letter_set.letter_solutions << letter_solution
+                    end
+                    six_lws.each do |six_lw|
+                      letter_solution =
+                        LetterSolution.create(word: six_lw, length: 6)
+                      letter_set.letter_solutions << letter_solution
+                    end
+                    five_lws.each do |five_lw|
+                      letter_solution =
+                        LetterSolution.create(word: five_lw, length: 5)
+                      letter_set.letter_solutions << letter_solution
+                    end
+                    four_lws.each do |four_lw|
+                      letter_solution =
+                        LetterSolution.create(word: four_lw, length: 4)
+                      letter_set.letter_solutions << letter_solution
+                    end
+                    three_lws.each do |three_lw|
+                      letter_solution =
+                        LetterSolution.create(word: three_lw, length: 3)
+                      letter_set.letter_solutions << letter_solution
+                    end
+                    two_lws.each do |two_lw|
+                      letter_solution =
+                        LetterSolution.create(word: two_lw, length: 2)
+                      letter_set.letter_solutions << letter_solution
+                    end
+                    next
                   end
-                  seven_lws.each do |seven_lw|
-                    letter_solution =
-                      LetterSolution.create(word: seven_lw, length: 7)
-                    letter_set.letter_solutions << letter_solution
-                  end
-                  six_lws.each do |six_lw|
-                    letter_solution =
-                      LetterSolution.create(word: six_lw, length: 6)
-                    letter_set.letter_solutions << letter_solution
-                  end
-                  five_lws.each do |five_lw|
-                    letter_solution =
-                      LetterSolution.create(word: five_lw, length: 5)
-                    letter_set.letter_solutions << letter_solution
-                  end
-                  four_lws.each do |four_lw|
-                    letter_solution =
-                      LetterSolution.create(word: four_lw, length: 4)
-                    letter_set.letter_solutions << letter_solution
-                  end
-                  three_lws.each do |three_lw|
-                    letter_solution =
-                      LetterSolution.create(word: three_lw, length: 3)
-                    letter_set.letter_solutions << letter_solution
-                  end
-                  two_lws.each do |two_lw|
-                    letter_solution =
-                      LetterSolution.create(word: two_lw, length: 2)
-                    letter_set.letter_solutions << letter_solution
-                  end
-                  next
                 end
               end
             end

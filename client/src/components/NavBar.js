@@ -9,6 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { Link } from 'react-router-dom';
 
 function NavBar() {
   const [rightAnchor, setRightAnchor] = useState(null);
@@ -59,7 +60,7 @@ function handleLeftClose(){
                 open={Boolean(leftAnchor)}
                 onClose={handleLeftClose}
               >
-                <MenuItem onClick={handleLeftClose}>Play Now</MenuItem>
+                <MenuItem component={Link} to="/" onClick={handleLeftClose}>Play Now</MenuItem>
                 <MenuItem onClick={handleLeftClose}>About</MenuItem>
               </Menu>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: "center"}}>
