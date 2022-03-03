@@ -59,10 +59,10 @@ function PlayNow({user}){
             direction="row" spacing={2}  
             divider={<Divider orientation="vertical" flexItem />}
             >
-                <Button size= "medium" variant="contained" endIcon={<AbcIcon/>}>
+                <Button href="/test" size= "medium" variant="contained" endIcon={<AbcIcon/>}>
                     Practice
                 </Button>
-                <Button size="medium" variant="contained" endIcon={<CalculateIcon />}>
+                <Button onClick={(e) => console.log(user)} size="medium" variant="contained" endIcon={<CalculateIcon />}>
                     Practice
                 </Button>
             </Stack>

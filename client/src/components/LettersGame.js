@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import LetterTile from "./LetterTile";
 import { Box } from "@mui/system";
@@ -7,26 +8,10 @@ import { Button } from "@mui/material";
 import PlayersWord from "./PlayersWord";
 import LetterRules from "./LetterRules";
 
-function PlayLetters({user}){
-    const [todaysGame,setTodaysGame] = useState(false)
-    const [todaysLetters,setTodaysLetters] = useState(false)
-    const [todaysSolutions,setTodaysSolutions] = useState(false)
+function LettersGame({user, todaysGame,todaysLetters,setTodaysLetters,todaysSolutions,setPlaying,submittedAnswer,setSubmittedAnswer,setHasPlayed}){
     const [playerSolution,setPlayerSolution] = useState([])
     const [hasReset,setHasReset] = useState(false)
     const [seconds,setSeconds] = useState(30)
-    const [submittedAnswer,setSubmittedAnswer] = useState("")
-
-    useEffect(() => {
-        fetch(`/letter_games`)
-          .then((res) => res.json())
-          .then((gameData) => {
-            let dailyGame = findTodaysGame(gameData)
-            console.log(user)
-            setTodaysGame(dailyGame[0])
-            console.log(dailyGame[0])
-            setTodaysLetters(dailyGame[0].letter_set.letters.split(""))
-          });
-      }, []);
 
       useEffect(() => {
         let totalSeconds = 30
@@ -51,7 +36,6 @@ function PlayLetters({user}){
         console.log("hi")
         console.log(submittedAnswer)
         handleSubmit()
-        setSeconds(false)
     }
 
     function handleSubmittedAnswer(){
@@ -60,14 +44,6 @@ function PlayLetters({user}){
         console.log(submittedAnswer)
         handleReset()
         }
-    }
-    
-    function findTodaysGame(allGames){
-        let today = new Date().toISOString().slice(0, 10)
-        const todaysGame = allGames.filter((game) => {
-            return game.date === today
-        })
-        return todaysGame
     }
 
     function grabLetter(e){
@@ -180,7 +156,11 @@ function PlayLetters({user}){
             body: JSON.stringify(entry),
           }).then((res) => {
             if (res.ok) {
-              res.json().then((data) => console.log(data));
+              res.json().then((data) => {
+                console.log(data)
+                setPlaying(false)
+                setHasPlayed(data)
+            });
             } else {
               res.json().then((errors) => console.log(errors));
             }
@@ -287,4 +267,4 @@ function PlayLetters({user}){
     )
 }
 
-export default PlayLetters
+export default LettersGame

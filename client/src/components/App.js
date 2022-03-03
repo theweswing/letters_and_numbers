@@ -6,6 +6,8 @@ import { ThemeProvider } from "@mui/material/styles"
 import { createTheme } from "@mui/material/styles"
 import PlayLetters from "./PlayLetters";
 import LandingLetters from "./LandingLetters";
+import { Button } from "@mui/material";
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -14,18 +16,17 @@ function App() {
     // auto-login
     fetch("/me").then((r) => {
       if (r.ok) {
-        r.json().then((user) => {
-          console.log(user)
-          setUser(user)
+        r.json().then((userFound) => {
+          setUser(userFound)
+          console.log(userFound)
         });
-      }
-      else {
-        createUser()
       }
     });
   }, []);
 
-  function createUser(){
+
+  function createUser(userData){
+    if(!userData){
     fetch(`/users`, {
       method: "POST",
       headers: {
@@ -34,10 +35,18 @@ function App() {
       })
     .then((r) => r.json())
     .then((newUser) => {
+        console.log("user not found, new user created")
         console.log(newUser)
         setUser(newUser)
     })
   }
+  else{
+    console.log("valid user fed to createUser function")
+    console.log(userData)
+    setUser(userData)
+    console.log(user)
+  }
+}
 
   let theme = createTheme({
     palette: {
@@ -50,7 +59,7 @@ function App() {
           contrastText: "#FFFFFF"
       }
   }})
-
+if(user){
   return (
     <>
     <ThemeProvider theme={theme}>
@@ -72,6 +81,14 @@ function App() {
       </ThemeProvider>
     </>
   );
+}
+if(!user){
+  return (
+    <ThemeProvider theme={theme}>
+    <NavBar user={user}/>
+    </ThemeProvider>
+  )
+}
 }
 
 export default App;

@@ -7,14 +7,27 @@ import { Button } from "@mui/material";
 import PlayersWord from "./PlayersWord";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-
+import PlayLetters from "./PlayLetters";
+import LetterRules from "./LetterRules";
+import LettersGame from "./LettersGame";
 
 function LandingLetters({user}){
     const [todaysGame,setTodaysGame] = useState(false)
     const [todaysLetters,setTodaysLetters] = useState(false)
     const [todaysSolutions,setTodaysSolutions] = useState(false)
     const [playerSolution,setPlayerSolution] = useState(false)
+    const [submittedAnswer,setSubmittedAnswer] = useState(false)
     const [hasPlayed,setHasPlayed] = useState(false)
+    const [toggleRules,setToggleRules] = useState(false)
+    const [playing,setPlaying] = useState(false)
+
+    function handleRules(){
+        setToggleRules(!toggleRules)
+        }
+
+    function handlePlaying(){
+        setPlaying(true)
+    }
 
     useEffect(() => {
         fetch(`/letter_games`)
@@ -48,7 +61,7 @@ function LandingLetters({user}){
             })
             if (todaysResult.length > 0) {
                 console.log(todaysResult)
-                setHasPlayed(todaysResult)
+                // setHasPlayed(todaysResult)
             }
         })
     }
@@ -118,27 +131,54 @@ function LandingLetters({user}){
         setTodaysSolutions(solutionsByLength)
     }
 
-    return (
+    if(playing && !hasPlayed){
+        return(
+            <Box
+        container
+        noValidate
+        sx={{ mt: 3 }}
+        style={{ justifyContent: "center" }}
+        >
+        <LettersGame setHasPlayed={setHasPlayed} user={user} todaysGame={todaysGame} todaysLetters={todaysLetters} setTodaysLetters={setTodaysLetters} todaysSolutions={todaysSolutions} setPlaying={setPlaying} submittedAnswer={submittedAnswer} setSubmittedAnswer={setSubmittedAnswer}/> 
+        </Box>
+        )
+    }
+
+    if(hasPlayed && !playing){
+        return(
         <Box
         container
         noValidate
         sx={{ mt: 3 }}
         style={{ justifyContent: "center" }}
         >
-        {hasPlayed ? 
         <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
         <Typography variant="h2">
-            {hasPlayed[0].answer} ({hasPlayed[0].score})
+            {hasPlayed.answer} ({hasPlayed.score})
         </Typography>
-        </Grid> :
-        <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-        <Button variant="contained">
-        I'm ready!
+        </Grid>
+        </Box>
+        )
+    }
+
+    if(!hasPlayed && !playing){
+        return(
+            <Box
+            container
+            noValidate
+            sx={{ mt: 3 }}
+            style={{ justifyContent: "center" }}
+            >
+            <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+        <Button onClick={handlePlaying} variant="contained">
+        PLAY
         </Button>
         </Grid>
-         }
-        </Box>
-    )
+         <LetterRules />
+            </Box>  
+        )
+    }
 }
+
 
 export default LandingLetters
