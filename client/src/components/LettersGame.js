@@ -159,7 +159,7 @@ function LettersGame({user, todaysGame,todaysLetters,setTodaysLetters,todaysSolu
               res.json().then((data) => {
                 console.log(data)
                 setPlaying(false)
-                setHasPlayed(data)
+                setHasPlayed(data[0])
             });
             } else {
               res.json().then((errors) => console.log(errors));

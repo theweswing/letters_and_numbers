@@ -7,19 +7,15 @@ class UsersController < ApplicationController
   end
 
   def show
-    # user = @current_user
-    # user = User.find_by(id: cookies.signed[:user_id])
-    user = User.find_by(id: session[:user_id]) if !user
+    user = User.find_by(id: cookies.signed[:user_id])
     session[:user_id] = user.id
-
-    # cookies.signed.permanent[:user_id] = user.id
+    cookies.signed.permanent[:user_id] = user.id
     render json: user, status: :ok
   end
 
   def create
     user = User.create!
-
-    # cookies.signed.permanent[:user_id] = user.id
+    cookies.signed.permanent[:user_id] = user.id
     session[:user_id] = user.id
     render json: user, status: :created
   end

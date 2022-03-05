@@ -10,6 +10,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import PlayLetters from "./PlayLetters";
 import LetterRules from "./LetterRules";
 import LettersGame from "./LettersGame";
+import LetterStats from "./LetterStats";
 
 function LandingLetters({user}){
     const [todaysGame,setTodaysGame] = useState(false)
@@ -61,7 +62,8 @@ function LandingLetters({user}){
             })
             if (todaysResult.length > 0) {
                 console.log(todaysResult)
-                // setHasPlayed(todaysResult)
+                console.log(todaysResult.length)
+                setHasPlayed(todaysResult)
             }
         })
     }
@@ -153,9 +155,7 @@ function LandingLetters({user}){
         style={{ justifyContent: "center" }}
         >
         <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-        <Typography variant="h2">
-            {hasPlayed.answer} ({hasPlayed.score})
-        </Typography>
+        <LetterStats hasPlayed={hasPlayed} todaysSolutions={todaysSolutions} />
         </Grid>
         </Box>
         )
