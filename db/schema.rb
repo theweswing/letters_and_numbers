@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_01_211357) do
+ActiveRecord::Schema.define(version: 2022_03_06_214401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "challenges", force: :cascade do |t|
+    t.bigint "letter_result_id_id"
+    t.boolean "seen"
+    t.boolean "approved"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["letter_result_id_id"], name: "index_challenges_on_letter_result_id_id"
+  end
 
   create_table "letter_games", force: :cascade do |t|
     t.date "date"
@@ -30,6 +39,7 @@ ActiveRecord::Schema.define(version: 2022_03_01_211357) do
     t.string "score"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "valid"
     t.index ["letter_game_id"], name: "index_letter_results_on_letter_game_id"
     t.index ["user_id"], name: "index_letter_results_on_user_id"
   end
