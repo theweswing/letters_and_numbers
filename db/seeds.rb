@@ -726,3 +726,22 @@ NumberGame.create(
   date: Date.parse('1991-10-17'),
   number_set_id: NumberSet.last[:id],
 )
+
+def game_stat_test()
+  today = LetterGame.first
+  solutions = today.letter_set.letter_solutions
+  counter = 0
+  while counter <= 100
+    word = solutions.sample(1)[0]
+    user = User.create
+    LetterResult.create(
+      user_id: user[:id],
+      letter_game_id: today[:id],
+      answer: word[:word],
+      score: word[:word].length,
+      accepted: true,
+    )
+    counter += 1
+  end
+end
+game_stat_test

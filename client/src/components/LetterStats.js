@@ -13,7 +13,7 @@ import LettersGame from "./LettersGame";
 import { Divider } from "@mui/material";
 import { Stack } from "@mui/material";
 
-function LetterStats({hasPlayed, todaysSolutions}){
+function LetterStats({hasPlayed, todaysSolutions,todaysGame}){
 const [toggle9,setToggle9] = useState(false)
 const [toggle8,setToggle8] = useState(false)
 const [toggle7,setToggle7] = useState(false)
@@ -22,6 +22,37 @@ const [toggle5,setToggle5] = useState(false)
 const [toggle4,setToggle4] = useState(false)
 const [toggle3,setToggle3] = useState(false)
 const [toggle2,setToggle2] = useState(false)
+const [todaysResults,setTodaysResults] = useState(false)
+
+useEffect(() => {
+    fetch(`/letter_games/${hasPlayed[0].id}/letter_results`)
+      .then((res) => res.json())
+      .then((resultData) => {
+        console.log(resultData)
+        console.log(hasPlayed[0])
+        tallyResults(resultData)
+      });
+  }, []);
+
+function tallyResults(results){
+    let totals = {
+        overallAnswers: 0,
+    }
+    results.forEach((givenResult) => {
+        totals.overallAnswers +=1
+        if (totals[givenResult.answer]){
+            totals[givenResult.answer] +=1
+        }
+        else {
+            totals[givenResult.answer] = 1
+        }
+    })
+    console.log(totals)
+    return totals
+}
+
+function produceAnalytics(tallied,userAnswer){
+}
 
 function toggle9s(){
     toggleAll()
@@ -78,7 +109,7 @@ function toggleAll(){
 function mapNines(solutions){
     const nine_lws = solutions.l9.map((givenWord) => {
         return (
-            <Typography variant = "subtitle2">
+            <Typography variant = "subtitle2" key = {givenWord}>
             ⭐ {givenWord.toUpperCase()} ({givenWord.length}) ⭐
             </Typography>
         )
@@ -89,7 +120,7 @@ function mapNines(solutions){
 function mapEights(solutions){
     const eight_lws = solutions.l8.map((givenWord) => {
         return (
-            <Grid item component={Typography} variant = "subtitle2" xs={6}>
+            <Grid item key = {givenWord} component={Typography} variant = "subtitle2" xs={6}>
             {givenWord.toUpperCase()} 
             </Grid>
             // <Typography variant = "subtitle2" xs={3}>
@@ -104,7 +135,7 @@ function mapEights(solutions){
 function mapSevens(solutions){
     const seven_lws = solutions.l7.map((givenWord) => {
         return (
-            <Typography variant = "subtitle2">
+            <Typography key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
             </Typography>
         )
@@ -115,7 +146,7 @@ function mapSevens(solutions){
 function mapSixes(solutions){
     const six_lws = solutions.l6.map((givenWord) => {
         return (
-            <Typography variant = "subtitle2">
+            <Typography key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
             </Typography>
         )
@@ -126,7 +157,7 @@ function mapSixes(solutions){
 function mapFives(solutions){
     const five_lws = solutions.l5.map((givenWord) => {
         return (
-            <Typography variant = "subtitle2">
+            <Typography key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
             </Typography>
         )
@@ -137,7 +168,7 @@ function mapFives(solutions){
 function mapFours(solutions){
     const four_lws = solutions.l4.map((givenWord) => {
         return (
-            <Typography variant = "subtitle2">
+            <Typography key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
             </Typography>
         )
@@ -148,7 +179,7 @@ function mapFours(solutions){
 function mapThrees(solutions){
     const three_lws = solutions.l3.map((givenWord) => {
         return (
-            <Typography variant = "subtitle2">
+            <Typography key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
             </Typography>
         )
@@ -159,7 +190,7 @@ function mapThrees(solutions){
 function mapTwos(solutions){
     const two_lws = solutions.l2.map((givenWord) => {
         return (
-            <Typography variant = "subtitle2">
+            <Typography key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
             </Typography>
         )
@@ -170,7 +201,7 @@ function mapTwos(solutions){
 function mapEights(solutions){
     const eight_lws = solutions.l8.map((givenWord) => {
         return (
-            <Typography variant = "subtitle2">
+            <Typography key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
             </Typography>
         )
@@ -188,7 +219,7 @@ if(hasPlayed){
             Your word:
             </Typography>
         <Typography variant="h3">
-            {hasPlayed[0].answer} ({hasPlayed[0].score})
+            {hasPlayed[0].answer.toUpperCase()} ({hasPlayed[0].score})
         </Typography>
         <Divider orientation="horizontal" />
         <Typography variant="h4" sx={{mt: 2, mb: 2}}>

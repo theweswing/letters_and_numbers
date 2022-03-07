@@ -61,6 +61,7 @@ function LandingLetters({user}){
                 return result.letter_game.date === today
             })
             if (todaysResult.length > 0) {
+                console.log("variable hasPlayed:")
                 console.log(todaysResult)
                 console.log(todaysResult.length)
                 setHasPlayed(todaysResult)
@@ -155,7 +156,7 @@ function LandingLetters({user}){
         style={{ justifyContent: "center" }}
         >
         <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-        <LetterStats hasPlayed={hasPlayed} todaysSolutions={todaysSolutions} />
+        <LetterStats hasPlayed={hasPlayed} todaysSolutions={todaysSolutions}/>
         </Grid>
         </Box>
         )

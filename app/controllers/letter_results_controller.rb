@@ -22,9 +22,24 @@ class LetterResultsController < ApplicationController
     render json: result, status: :created
   end
 
+  # def stats
+  #   game = LetterGame.find(params[:letter_game_id])
+  #   results = game.letter_results
+  #   commonality = { total_answers: 0 }
+  #   results.each do |given_result|
+  #     total_answers += 1
+  #     word = given_result[:answer]
+  #     if commonality[word]
+  #     commonality[word] += 1
+  #     else
+  #       commonality[word] = 1
+  #   end
+  #   render json: commonality, status: :ok
+  # end
+
   private
 
   def letter_result_params
-    params.permit(:user_id, :letter_game_id, :answer, :score)
+    params.permit(:user_id, :letter_game_id, :answer, :score, :accepted)
   end
 end

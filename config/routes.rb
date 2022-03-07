@@ -31,11 +31,14 @@ Rails.application.routes.draw do
 
   resources :number_results, only: %i[index show create]
 
+  resources :challenges, only: %i[index create]
+
   post '/signup', to: 'users#create'
   get '/me', to: 'users#show'
   post '/login', to: 'sessions#login'
   post '/savegame', to: 'sessions#save'
   delete '/logout', to: 'sessions#destroy'
+  get 'stats', to: 'letter_results#stats'
 
   # all other routes will be load our React application
   # this route definition matches:
