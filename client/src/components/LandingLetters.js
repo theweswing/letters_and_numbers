@@ -144,7 +144,7 @@ function LandingLetters({user}){
         style={{ justifyContent: "center" }}
         >
         <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-        <LetterStats hasPlayed={hasPlayed} todaysSolutions={todaysSolutions}/>
+        <LetterStats hasPlayed={hasPlayed} todaysSolutions={todaysSolutions} letters={todaysLetters}/>
         </Grid>
         </Box>
         )

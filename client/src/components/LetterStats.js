@@ -5,8 +5,10 @@ import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import { Divider } from "@mui/material";
 import FlagIcon from '@mui/icons-material/Flag';
+import LetterScoreChart from "./LetterScoreChart";
+import LetterAnalytics from "./LetterAnalytics";
 
-function LetterStats({hasPlayed, todaysSolutions}){
+function LetterStats({hasPlayed, todaysSolutions,letters}){
 const [toggle8,setToggle8] = useState(false)
 const [toggle7,setToggle7] = useState(false)
 const [toggle6,setToggle6] = useState(false)
@@ -30,11 +32,15 @@ useEffect(() => {
 function tallyResults(results){
     let totals = {
         overallAnswers: 0,
+        blankInvalid: 0
     }
     results.forEach((givenResult) => {
         totals.overallAnswers +=1
         if (totals[givenResult.answer]){
             totals[givenResult.answer] +=1
+        }
+        else if (givenResult.answer == ""){
+            totals.blankInvalid += 1
         }
         else {
             totals[givenResult.answer] = 1
@@ -51,6 +57,7 @@ function produceAnalytics(results,userGameData){
     let analytics = {
                     total: totalAnswers,
                     userAnswer: userGameData.answer,
+                    userScore: userGameData.score,
                     userAnswerPop: 0,
                     userAnswerPercent: 0,
                     mostPopAnswer: "",
@@ -74,19 +81,6 @@ function produceAnalytics(results,userGameData){
     return analytics
 }
 
-// function compareUserAnswer(tallied,userAnswer){
-//     let total = tallied.overallAnswers
-//     let userWord = userAnswer.answer
-//     if(tallied[userWord]){
-//         let percentage = (tallied[userWord]/total)*100
-//         console.log("User answer given by this % of users:")
-//         console.log(percentage)
-//     }
-//     else{
-//         console.log("Oops! Something went wrong finding!")
-//     }
-// }
-
 function checkForUserWord(placeholder,tallied){
     let userWord = placeholder.userAnswer
     let total = placeholder.total
@@ -97,22 +91,6 @@ function checkForUserWord(placeholder,tallied){
     }
 }
 
-// function mostPopularAnswer(tallied){
-//     let placeholder = {
-//         mostPopular: "",
-//         total: 0
-//     }
-//     for (const [key,value] of Object.entries(tallied)) {
-//         if(value > placeholder.total && key !== "overallAnswers"){
-//             placeholder.mostPopular = key
-//             placeholder.total = value
-//         }
-//     }
-//     console.log("Most popular answer:")
-//     console.log(placeholder)
-//     return placeholder
-// }
-
 function trackMostPopular(placeholder,key,value){
     if(value > placeholder.mostPopAnswerNum && key !== "overallAnswers"){
         placeholder.mostPopAnswer = key
@@ -120,75 +98,31 @@ function trackMostPopular(placeholder,key,value){
     }
 }
 
-// function userScoreSpread(tallied){
-//     let placeholder= {
-//         two: 0,
-//         three: 0,
-//         four: 0,
-//         five: 0,
-//         six: 0,
-//         seven: 0,
-//         eight: 0,
-//         nine: 0,
-//         overall: 0
-//     }
-//     for (const [key,value] of Object.entries(tallied)) {
-//         if(key != "overallAnswers"){
-//             if(value===2){
-//                 placeholder.two +=1
-//             }
-//             if(value===3){
-//                 placeholder.three +=1
-//             }
-//             if(value===4){
-//                 placeholder.four +=1
-//             }
-//             if(value===5){
-//                 placeholder.five +=1
-//             }
-//             if(value===6){
-//                 placeholder.six +=1
-//             }
-//             if(value===7){
-//                 placeholder.seven +=1
-//             }
-//             if(value===8){
-//                 placeholder.eight +=1
-//             }
-//             if(value===9){
-//                 placeholder.nine +=1
-//             }
-//         }
-//     }
-//     console.log("User score spread:")
-//     console.log(placeholder)
-// }
-
 function tallyScoreSpread(placeholder,key,value){
     if(key != "overallAnswers"){
         if(value===2){
-            placeholder.two +=1
+            placeholder.two += value
         }
         if(value===3){
-            placeholder.three +=1
+            placeholder.three +=value
         }
         if(value===4){
-            placeholder.four +=1
+            placeholder.four +=value
         }
         if(value===5){
-            placeholder.five +=1
+            placeholder.five +=value
         }
         if(value===6){
-            placeholder.six +=1
+            placeholder.six +=value
         }
         if(value===7){
-            placeholder.seven +=1
+            placeholder.seven +=value
         }
         if(value===8){
-            placeholder.eight +=1
+            placeholder.eight +=value
         }
         if(value===9){
-            placeholder.nine +=1
+            placeholder.nine +=value
         }
     }
 }
@@ -242,21 +176,21 @@ function toggleAll(){
 function displayUserAnswer(answer){
     if(answer.accepted == true){
         return (
-        <Typography variant="h4">
+        <Typography variant="subtitle1">
             {hasPlayed[0].answer.toUpperCase()} ({hasPlayed[0].score})
         </Typography>
         )
     }
     else if(answer.accepted == false && hasPlayed[0].answer===""){
         return (
-                <Typography variant="h6" color="red">
+                <Typography variant="h5" color="red">
                      No Word Submitted, 2 points given as courtesy.
                 </Typography>
                 )
             }
     else if(answer.accepted == false){
 return (
-        <Typography variant="h4" color="red">
+        <Typography variant="h5" color="red">
             {hasPlayed[0].answer.toUpperCase()}* ({hasPlayed[0].score}) <FlagIcon />
         </Typography>
         )
@@ -266,8 +200,8 @@ return (
 function mapNines(solutions){
     const nine_lws = solutions.l9.map((givenWord) => {
         return (
-            <Typography variant = "subtitle2" key = {givenWord}>
-            ⭐ {givenWord.toUpperCase()} ({givenWord.length}) ⭐
+            <Typography variant = "subtitle1" key = {givenWord}>
+            {givenWord.toUpperCase()}
             </Typography>
         )
     })
@@ -277,12 +211,9 @@ function mapNines(solutions){
 function mapEights(solutions){
     const eight_lws = solutions.l8.map((givenWord) => {
         return (
-            <Grid item key = {givenWord} component={Typography} variant = "subtitle2" xs={6}>
-            {givenWord.toUpperCase()} 
+            <Grid item component={Typography} xs={3} key = {givenWord} variant = "subtitle2">
+            {givenWord.toUpperCase()}    
             </Grid>
-            // <Typography variant = "subtitle2" xs={3}>
-            // {givenWord.toUpperCase()}    
-            // </Typography>
         )
     })
     return eight_lws
@@ -292,9 +223,9 @@ function mapEights(solutions){
 function mapSevens(solutions){
     const seven_lws = solutions.l7.map((givenWord) => {
         return (
-            <Typography key = {givenWord} variant = "subtitle2">
+            <Grid item component={Typography} xs={3} key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
-            </Typography>
+            </Grid>
         )
     })
     return seven_lws
@@ -303,9 +234,9 @@ function mapSevens(solutions){
 function mapSixes(solutions){
     const six_lws = solutions.l6.map((givenWord) => {
         return (
-            <Typography key = {givenWord} variant = "subtitle2">
+            <Grid item component={Typography} xs={3} key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
-            </Typography>
+            </Grid>
         )
     })
     return six_lws
@@ -314,9 +245,9 @@ function mapSixes(solutions){
 function mapFives(solutions){
     const five_lws = solutions.l5.map((givenWord) => {
         return (
-            <Typography key = {givenWord} variant = "subtitle2">
+            <Grid item component={Typography} xs={3} key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
-            </Typography>
+            </Grid>
         )
     })
     return five_lws
@@ -325,9 +256,9 @@ function mapFives(solutions){
 function mapFours(solutions){
     const four_lws = solutions.l4.map((givenWord) => {
         return (
-            <Typography key = {givenWord} variant = "subtitle2">
+            <Grid item component={Typography} xs={3} key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
-            </Typography>
+            </Grid>
         )
     })
     return four_lws
@@ -336,9 +267,9 @@ function mapFours(solutions){
 function mapThrees(solutions){
     const three_lws = solutions.l3.map((givenWord) => {
         return (
-            <Typography key = {givenWord} variant = "subtitle2">
+            <Grid item component={Typography} xs={3} key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
-            </Typography>
+            </Grid>
         )
     })
     return three_lws
@@ -347,32 +278,49 @@ function mapThrees(solutions){
 function mapTwos(solutions){
     const two_lws = solutions.l2.map((givenWord) => {
         return (
-            <Typography key = {givenWord} variant = "subtitle2">
+            <Grid item component={Typography} xs={3} key = {givenWord} variant = "subtitle2">
             {givenWord.toUpperCase()}    
-            </Typography>
+            </Grid>
         )
     })
     return two_lws
 }
 
+function displayLetters(letties){
+    let new_display = []
+    letties.forEach((letter) => {
+        new_display.push(letter.toUpperCase())
+        new_display.push(" ")
+    })
+    return new_display
+}
+
 if(hasPlayed && todaysSolutions){
     return (
         <Grid item xs={12} sx={{ mt: -2 }} align="center">
-            <Typography variant="h4">
+            <Typography variant="h6">
             {hasPlayed[0].letter_game.date}
             </Typography>
-            <Divider orientation="horizontal" />
-            <Typography variant="h5" sx={{mt: 2, mb: 2}}>
-            Your answer:
+            <Typography variant="h6">
+            {displayLetters(letters)}
             </Typography>
-        <Typography variant="h3">
-            {hasPlayed[0].answer.toUpperCase()} ({hasPlayed[0].score})
-        </Typography>
-        <Divider orientation="horizontal" />
-        <Typography variant="h4" sx={{mt: 2, mb: 2}}>
-            Other possible solutions:
+            <Divider orientation="horizontal" />
+            <Typography variant="h6" sx={{mt: 2, mb: 1}}>
+            Your solution:
+            </Typography>
+        {displayUserAnswer(hasPlayed[0])}
+        <Typography variant="h6" sx={{mt: 1, mb: 1}}>
+           Perfect Solution:
             </Typography>
             {mapNines(todaysSolutions)}
+        <Typography variant="h6" sx={{mt: 1, mb: 1}}>
+            How you did:
+            </Typography>
+        <LetterAnalytics analytics={analytics} />
+        <Divider orientation="horizontal" />
+            <Typography variant="h7" sx={{mt: 1, mb: 0}}>
+           Other solutions:
+            </Typography>
             <Grid
             container
             direction="row"
@@ -380,9 +328,7 @@ if(hasPlayed && todaysSolutions){
             alignItems="stretch"
             wrap="nowrap"
             >
-            {toggle8 ? <Grid item zeroMinWidth component={Button} xs={1} sx={{mt:1, mb:1, ml:1, mr:1}} variant="contained" onClick={toggle8s} size="medium">8</Grid>
-            : <Grid item zeroMinWidth component={Button} xs={1} sx={{mt:1, mb:1, ml:1, mr:1}} variant="contained" onClick={toggle8s} size="medium">8</Grid>
-            }
+            <Grid item zeroMinWidth component={Button} xs={1} sx={{mt:1, mb:1, ml:1, mr:1}} variant="contained" onClick={toggle8s} size="medium">8</Grid>
             <Grid item zeroMinWidth component={Button} xs={1} sx={{mt:1, mb:1, ml:1, mr:1}} variant="contained" onClick={toggle7s} size="medium">7</Grid>
             <Grid item zeroMinWidth component={Button} xs={1} sx={{mt:1, mb:1, ml:1, mr:1}} variant="contained" onClick={toggle6s} size="medium">6</Grid>
             <Grid item zeroMinWidth component={Button} xs={1} sx={{mt:1, mb:1, ml:1, mr:1}} variant="contained" onClick={toggle5s} size="medium">5</Grid>
@@ -390,33 +336,75 @@ if(hasPlayed && todaysSolutions){
             <Grid item zeroMinWidth component={Button} xs={1} sx={{mt:1, mb:1, ml:1, mr:1}} variant="contained" onClick={toggle3s} size="medium">3</Grid>
             <Grid item zeroMinWidth component={Button} xs={1} sx={{mt:1, mb:1, ml:1, mr:1}} variant="contained" onClick={toggle2s} size="medium">2</Grid>
             </Grid>
-            {/* <Button sx={{mt:1, mb:1}} fullWidth variant="contained" onClick={toggle8s}>Eights</Button> */}
             {toggle8 &&
-            mapEights(todaysSolutions)
+            <Grid
+            container
+            direction="row"
+            justifyContent="left"
+            alignItems="stretch"
+            >
+            {mapEights(todaysSolutions)}
+            </Grid>
             }  
-            {/* <Button sx={{mt:1, mb:1}} fullWidth variant="contained" onClick={toggle7s}>Sevens</Button> */}
             {toggle7 &&
-            mapSevens(todaysSolutions)
+            <Grid
+            container
+            direction="row"
+            justifyContent="left"
+            alignItems="stretch"
+            >
+            {mapSevens(todaysSolutions)}
+            </Grid>
             }
-            {/* <Button sx={{mt:1, mb:1}} fullWidth variant="contained" onClick={toggle6s}>Sixes</Button> */}
             {toggle6 &&
-            mapSixes(todaysSolutions)
+            <Grid
+            container
+            direction="row"
+            justifyContent="left"
+            alignItems="stretch"
+            >
+            {mapSixes(todaysSolutions)}
+            </Grid>
             }
-            {/* <Button sx={{mt:1, mb:1}} fullWidth variant="contained" onClick={toggle5s}>Fives</Button> */}
             {toggle5 &&
-            mapFives(todaysSolutions)
+            <Grid
+            container
+            direction="row"
+            justifyContent="left"
+            alignItems="stretch"
+            >
+            {mapFives(todaysSolutions)}
+            </Grid>
             }
-            {/* <Button sx={{mt:1, mb:1}} fullWidth variant="contained" onClick={toggle4s}>Fours</Button> */}
             {toggle4 &&
-            mapFours(todaysSolutions)
+            <Grid
+            container
+            direction="row"
+            justifyContent="left"
+            alignItems="stretch"
+            >
+            {mapFours(todaysSolutions)}
+            </Grid>
             }
-            {/* <Button sx={{mt:1, mb:1}} fullWidth variant="contained" onClick={toggle3s}>Threes</Button> */}
             {toggle3 &&
-            mapThrees(todaysSolutions)
+            <Grid
+            container
+            direction="row"
+            justifyContent="left"
+            alignItems="stretch"
+            >
+            {mapThrees(todaysSolutions)}
+            </Grid>
             }
-            {/* <Button sx={{mt:1, mb:1}} fullWidth variant="contained" onClick={toggle2s}>Twos</Button> */}
             {toggle2 &&
-            mapTwos(todaysSolutions)
+            <Grid
+            container
+            direction="row"
+            justifyContent="left"
+            alignItems="stretch"
+            >
+            {mapTwos(todaysSolutions)}
+            </Grid>
             }
         </Grid>
     )

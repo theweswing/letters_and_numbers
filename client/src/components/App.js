@@ -7,7 +7,6 @@ import { createTheme } from "@mui/material/styles"
 import PlayLetters from "./PlayLetters";
 import LandingLetters from "./LandingLetters";
 
-
 function App() {
   const [user, setUser] = useState(null);
 
@@ -60,7 +59,24 @@ function App() {
         main: "#35D801",
           contrastText: "#FFFFFF"
       }
-  }})
+  },
+    typography: {
+    // Use the system font instead of the default Roboto font.
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+  },})
+
+  
 if(user){
   return (
     <>
