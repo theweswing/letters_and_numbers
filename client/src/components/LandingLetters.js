@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
-import LetterTile from "./LetterTile";
 import { Box } from "@mui/system";
 import { Grid } from "@mui/material";
-import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
-import PlayersWord from "./PlayersWord";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import PlayLetters from "./PlayLetters";
 import LetterRules from "./LetterRules";
 import LettersGame from "./LettersGame";
 import LetterStats from "./LetterStats";
@@ -16,15 +10,9 @@ function LandingLetters({user}){
     const [todaysGame,setTodaysGame] = useState(false)
     const [todaysLetters,setTodaysLetters] = useState(false)
     const [todaysSolutions,setTodaysSolutions] = useState(false)
-    const [playerSolution,setPlayerSolution] = useState(false)
     const [submittedAnswer,setSubmittedAnswer] = useState(false)
     const [hasPlayed,setHasPlayed] = useState(false)
-    const [toggleRules,setToggleRules] = useState(false)
     const [playing,setPlaying] = useState(false)
-
-    function handleRules(){
-        setToggleRules(!toggleRules)
-        }
 
     function handlePlaying(){
         setPlaying(true)
@@ -88,44 +76,44 @@ function LandingLetters({user}){
             l3: [],
             l2: []
         }
-        const allWords = solutions.map((givenWord) => {
-            if(givenWord.length == 9){
-                if (solutionsByLength.l9.includes(givenWord.word) == false){
+        solutions.forEach((givenWord) => {
+            if(givenWord.length === 9){
+                if (solutionsByLength.l9.includes(givenWord.word) === false){
                     solutionsByLength.l9.push(givenWord.word)
                 }
             }
-            if(givenWord.length == 8){
-                if (solutionsByLength.l8.includes(givenWord.word) == false){
+            if(givenWord.length === 8){
+                if (solutionsByLength.l8.includes(givenWord.word) === false){
                     solutionsByLength.l8.push(givenWord.word)
                 }
             }
-            if(givenWord.length == 7){
-                if (solutionsByLength.l7.includes(givenWord.word) == false){
+            if(givenWord.length === 7){
+                if (solutionsByLength.l7.includes(givenWord.word) === false){
                     solutionsByLength.l7.push(givenWord.word)
                 }
             }
-            if(givenWord.length == 6){
-                if (solutionsByLength.l6.includes(givenWord.word) == false){
+            if(givenWord.length === 6){
+                if (solutionsByLength.l6.includes(givenWord.word) === false){
                     solutionsByLength.l6.push(givenWord.word)
                 }
             }
-            if(givenWord.length == 5){
-                if (solutionsByLength.l5.includes(givenWord.word) == false){
+            if(givenWord.length === 5){
+                if (solutionsByLength.l5.includes(givenWord.word) === false){
                     solutionsByLength.l5.push(givenWord.word)
                 }
             }
-            if(givenWord.length == 4){
-                if (solutionsByLength.l4.includes(givenWord.word) == false){
+            if(givenWord.length === 4){
+                if (solutionsByLength.l4.includes(givenWord.word) === false){
                     solutionsByLength.l4.push(givenWord.word)
                 }
             }
-            if(givenWord.length == 3){
-                if (solutionsByLength.l3.includes(givenWord.word) == false){
+            if(givenWord.length === 3){
+                if (solutionsByLength.l3.includes(givenWord.word) === false){
                     solutionsByLength.l3.push(givenWord.word)
                 }
             }
-            if(givenWord.length == 2){
-                if (solutionsByLength.l2.includes(givenWord.word) == false){
+            if(givenWord.length === 2){
+                if (solutionsByLength.l2.includes(givenWord.word) === false){
                     solutionsByLength.l2.push(givenWord.word)
                 }
             }

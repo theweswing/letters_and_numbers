@@ -6,7 +6,6 @@ import { ThemeProvider } from "@mui/material/styles"
 import { createTheme } from "@mui/material/styles"
 import PlayLetters from "./PlayLetters";
 import LandingLetters from "./LandingLetters";
-import { Button } from "@mui/material";
 
 
 function App() {
@@ -19,6 +18,9 @@ function App() {
         r.json().then((userFound) => {
           setUser(userFound)
           console.log(userFound)
+          if(!userFound.id){
+            createUser(userFound)
+          }
         });
       }
     });

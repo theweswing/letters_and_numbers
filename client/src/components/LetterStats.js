@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react";
-import LetterTile from "./LetterTile";
 import { Box } from "@mui/system";
 import { Grid } from "@mui/material";
 import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
-import PlayersWord from "./PlayersWord";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import PlayLetters from "./PlayLetters";
-import LetterRules from "./LetterRules";
-import LettersGame from "./LettersGame";
 import { Divider } from "@mui/material";
-import { Stack } from "@mui/material";
+import FlagIcon from '@mui/icons-material/Flag';
 
-function LetterStats({hasPlayed, todaysSolutions,todaysGame}){
-const [toggle9,setToggle9] = useState(false)
+function LetterStats({hasPlayed, todaysSolutions}){
 const [toggle8,setToggle8] = useState(false)
 const [toggle7,setToggle7] = useState(false)
 const [toggle6,setToggle6] = useState(false)
@@ -22,7 +14,7 @@ const [toggle5,setToggle5] = useState(false)
 const [toggle4,setToggle4] = useState(false)
 const [toggle3,setToggle3] = useState(false)
 const [toggle2,setToggle2] = useState(false)
-const [todaysResults,setTodaysResults] = useState(false)
+const [analytics,setAnalytics] = useState(false)
 
 useEffect(() => {
     fetch(`/letter_games/${hasPlayed[0].id}/letter_results`)
@@ -30,7 +22,8 @@ useEffect(() => {
       .then((resultData) => {
         console.log(resultData)
         console.log(hasPlayed[0])
-        tallyResults(resultData)
+        let stats = produceAnalytics(resultData,hasPlayed[0])
+        setAnalytics(stats)
       });
   }, []);
 
@@ -47,16 +40,157 @@ function tallyResults(results){
             totals[givenResult.answer] = 1
         }
     })
-    console.log(totals)
     return totals
 }
 
-function produceAnalytics(tallied,userAnswer){
+function produceAnalytics(results,userGameData){
+    const talliedData = tallyResults(results)
+    const totalAnswers = talliedData.overallAnswers
+    const userWord = userGameData.answer
+    const userScore = userGameData.score
+    let analytics = {
+                    total: totalAnswers,
+                    userAnswer: userGameData.answer,
+                    userAnswerPop: 0,
+                    userAnswerPercent: 0,
+                    mostPopAnswer: "",
+                    mostPopAnswerNum: 0,
+                    two: 0,
+                    three: 0,
+                    four: 0,
+                    five: 0,
+                    six: 0,
+                    seven: 0,
+                    eight: 0,
+                    nine: 0,
+                    talliedData: talliedData
+                    }
+    checkForUserWord(analytics,talliedData)
+    for (const [key,value] of Object.entries(talliedData)) {
+        trackMostPopular(analytics,key,value)
+        tallyScoreSpread(analytics,key,value)
+    }
+    console.log(analytics)
+    return analytics
 }
 
-function toggle9s(){
-    toggleAll()
-    setToggle9(!toggle9)
+// function compareUserAnswer(tallied,userAnswer){
+//     let total = tallied.overallAnswers
+//     let userWord = userAnswer.answer
+//     if(tallied[userWord]){
+//         let percentage = (tallied[userWord]/total)*100
+//         console.log("User answer given by this % of users:")
+//         console.log(percentage)
+//     }
+//     else{
+//         console.log("Oops! Something went wrong finding!")
+//     }
+// }
+
+function checkForUserWord(placeholder,tallied){
+    let userWord = placeholder.userAnswer
+    let total = placeholder.total
+    if(tallied[userWord]){
+        let percentage = (tallied[userWord]/total)*100
+        placeholder.userAnswerPop = tallied[userWord]
+        placeholder.userAnswerPercent = percentage
+    }
+}
+
+// function mostPopularAnswer(tallied){
+//     let placeholder = {
+//         mostPopular: "",
+//         total: 0
+//     }
+//     for (const [key,value] of Object.entries(tallied)) {
+//         if(value > placeholder.total && key !== "overallAnswers"){
+//             placeholder.mostPopular = key
+//             placeholder.total = value
+//         }
+//     }
+//     console.log("Most popular answer:")
+//     console.log(placeholder)
+//     return placeholder
+// }
+
+function trackMostPopular(placeholder,key,value){
+    if(value > placeholder.mostPopAnswerNum && key !== "overallAnswers"){
+        placeholder.mostPopAnswer = key
+        placeholder.mostPopAnswerNum = value
+    }
+}
+
+// function userScoreSpread(tallied){
+//     let placeholder= {
+//         two: 0,
+//         three: 0,
+//         four: 0,
+//         five: 0,
+//         six: 0,
+//         seven: 0,
+//         eight: 0,
+//         nine: 0,
+//         overall: 0
+//     }
+//     for (const [key,value] of Object.entries(tallied)) {
+//         if(key != "overallAnswers"){
+//             if(value===2){
+//                 placeholder.two +=1
+//             }
+//             if(value===3){
+//                 placeholder.three +=1
+//             }
+//             if(value===4){
+//                 placeholder.four +=1
+//             }
+//             if(value===5){
+//                 placeholder.five +=1
+//             }
+//             if(value===6){
+//                 placeholder.six +=1
+//             }
+//             if(value===7){
+//                 placeholder.seven +=1
+//             }
+//             if(value===8){
+//                 placeholder.eight +=1
+//             }
+//             if(value===9){
+//                 placeholder.nine +=1
+//             }
+//         }
+//     }
+//     console.log("User score spread:")
+//     console.log(placeholder)
+// }
+
+function tallyScoreSpread(placeholder,key,value){
+    if(key != "overallAnswers"){
+        if(value===2){
+            placeholder.two +=1
+        }
+        if(value===3){
+            placeholder.three +=1
+        }
+        if(value===4){
+            placeholder.four +=1
+        }
+        if(value===5){
+            placeholder.five +=1
+        }
+        if(value===6){
+            placeholder.six +=1
+        }
+        if(value===7){
+            placeholder.seven +=1
+        }
+        if(value===8){
+            placeholder.eight +=1
+        }
+        if(value===9){
+            placeholder.nine +=1
+        }
+    }
 }
 
 function toggle8s(){
@@ -96,7 +230,6 @@ function toggle2s(){
 }
 
 function toggleAll(){
-    setToggle9(false)
     setToggle8(false)
     setToggle7(false)
     setToggle6(false)
@@ -104,6 +237,30 @@ function toggleAll(){
     setToggle4(false)
     setToggle3(false)
     setToggle2(false)
+}
+
+function displayUserAnswer(answer){
+    if(answer.accepted == true){
+        return (
+        <Typography variant="h4">
+            {hasPlayed[0].answer.toUpperCase()} ({hasPlayed[0].score})
+        </Typography>
+        )
+    }
+    else if(answer.accepted == false && hasPlayed[0].answer===""){
+        return (
+                <Typography variant="h6" color="red">
+                     No Word Submitted, 2 points given as courtesy.
+                </Typography>
+                )
+            }
+    else if(answer.accepted == false){
+return (
+        <Typography variant="h4" color="red">
+            {hasPlayed[0].answer.toUpperCase()}* ({hasPlayed[0].score}) <FlagIcon />
+        </Typography>
+        )
+    }
 }
 
 function mapNines(solutions){
@@ -198,17 +355,7 @@ function mapTwos(solutions){
     return two_lws
 }
 
-function mapEights(solutions){
-    const eight_lws = solutions.l8.map((givenWord) => {
-        return (
-            <Typography key = {givenWord} variant = "subtitle2">
-            {givenWord.toUpperCase()}    
-            </Typography>
-        )
-    })
-    return eight_lws
-}
-if(hasPlayed){
+if(hasPlayed && todaysSolutions){
     return (
         <Grid item xs={12} sx={{ mt: -2 }} align="center">
             <Typography variant="h4">
@@ -216,7 +363,7 @@ if(hasPlayed){
             </Typography>
             <Divider orientation="horizontal" />
             <Typography variant="h5" sx={{mt: 2, mb: 2}}>
-            Your word:
+            Your answer:
             </Typography>
         <Typography variant="h3">
             {hasPlayed[0].answer.toUpperCase()} ({hasPlayed[0].score})
