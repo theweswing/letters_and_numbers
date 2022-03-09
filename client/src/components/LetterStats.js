@@ -19,7 +19,7 @@ const [toggle2,setToggle2] = useState(false)
 const [analytics,setAnalytics] = useState(false)
 
 useEffect(() => {
-    fetch(`/letter_games/${hasPlayed[0].id}/letter_results`)
+    fetch(`/letter_games/${hasPlayed[0].letter_game.id}/letter_results`)
       .then((res) => res.json())
       .then((resultData) => {
         console.log(resultData)
@@ -100,28 +100,28 @@ function trackMostPopular(placeholder,key,value){
 
 function tallyScoreSpread(placeholder,key,value){
     if(key != "overallAnswers"){
-        if(value===2){
+        if(key.length===2){
             placeholder.two += value
         }
-        if(value===3){
+        if(key.length===3){
             placeholder.three +=value
         }
-        if(value===4){
+        if(key.length===4){
             placeholder.four +=value
         }
-        if(value===5){
+        if(key.length===5){
             placeholder.five +=value
         }
-        if(value===6){
+        if(key.length==6){
             placeholder.six +=value
         }
-        if(value===7){
+        if(key.length===7){
             placeholder.seven +=value
         }
-        if(value===8){
+        if(key.length===8){
             placeholder.eight +=value
         }
-        if(value===9){
+        if(key.length===9){
             placeholder.nine +=value
         }
     }
@@ -305,14 +305,15 @@ if(hasPlayed && todaysSolutions){
             {displayLetters(letters)}
             </Typography>
             <Divider orientation="horizontal" />
-            <Typography variant="h6" sx={{mt: 2, mb: 1}}>
-            Your solution:
-            </Typography>
-        {displayUserAnswer(hasPlayed[0])}
-        <Typography variant="h6" sx={{mt: 1, mb: 1}}>
+            <Typography variant="h6" sx={{mt: 1, mb: 1}}>
            Perfect Solution:
             </Typography>
             {mapNines(todaysSolutions)}
+            <Typography variant="h6" sx={{mt: 1, mb: 1}}>
+            Your solution:
+            </Typography>
+        {displayUserAnswer(hasPlayed[0])}
+        
         <Typography variant="h6" sx={{mt: 1, mb: 1}}>
             How you did:
             </Typography>

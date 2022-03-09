@@ -6,6 +6,7 @@ import { ThemeProvider } from "@mui/material/styles"
 import { createTheme } from "@mui/material/styles"
 import PlayLetters from "./PlayLetters";
 import LandingLetters from "./LandingLetters";
+import LandingNumbers from "./LandingNumbers";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -76,7 +77,7 @@ function App() {
     ].join(','),
   },})
 
-  
+
 if(user){
   return (
     <>
@@ -91,6 +92,9 @@ if(user){
         </Route>
         <Route exact path ="/test">
         <LandingLetters user={user}/>
+        </Route>
+        <Route exact path ="/numbers">
+        <LandingNumbers user={user}/>
         </Route>
         <Route path="*">
         <PlayNow user={user} />

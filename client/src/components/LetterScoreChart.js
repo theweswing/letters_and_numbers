@@ -3,7 +3,7 @@ import Chart from 'chart.js/auto'
 import { Bar } from "react-chartjs-2";
 
 function LetterScoreChart({user,data}){
-
+console.log(data)
   function convertAnalytics(data){
     let analytics = {
       labels: ['2', '3', '4','5','6','7','8','9'],

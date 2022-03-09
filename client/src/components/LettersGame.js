@@ -148,7 +148,8 @@ function LettersGame({user, todaysGame,todaysLetters,setTodaysLetters,todaysSolu
             user_id: user.id,
             letter_game_id: todaysGame.id,
             answer: answer,
-            score: answer.length
+            score: answer.length,
+            accepted: true
         }
         fetch("/letter_results", {
             method: "POST",
@@ -172,6 +173,7 @@ function LettersGame({user, todaysGame,todaysLetters,setTodaysLetters,todaysSolu
             user_id: user.id,
             letter_game_id: todaysGame.id,
             answer: answer,
+            accepted: false,
             score: 2
         }
         fetch("/letter_results", {
