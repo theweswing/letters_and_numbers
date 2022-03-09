@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-function NumberTile({number, grabNumber,reset}){
+function OperandTile({operand, grabOperand,reset}){
     const [clicked,setClicked]=useState(false)
 
     useEffect(() => {
@@ -16,7 +16,7 @@ function NumberTile({number, grabNumber,reset}){
         setClicked(true)
         if(e.target.value !== 0){
         console.log(clicked)
-        grabNumber(e)
+        grabOperand(e)
         setClicked(true)
         console.log(e.target.value)
         }
@@ -27,7 +27,7 @@ function NumberTile({number, grabNumber,reset}){
         return (
             <Button
             onClick={handleClick}
-            value={number}
+            value={operand}
             variant="contained"
             sx={{
                 margin: .5,
@@ -45,7 +45,7 @@ function NumberTile({number, grabNumber,reset}){
       }
             }}
             >
-            {number}
+            {operand}
             </Button>
         )
     }
@@ -71,11 +71,11 @@ function NumberTile({number, grabNumber,reset}){
     //   }
             }}
             >
-            {number}
+            {operand}
             </Button>
         )
     }
     
 }
 
-export default NumberTile
+export default OperandTile

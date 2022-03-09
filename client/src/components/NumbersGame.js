@@ -7,6 +7,7 @@ import { Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import PlayersWord from "./PlayersWord";
 import NumberTile from "./NumberTile";
+import OperandTile from "./OperandTile";
 // import LetterRules from "./LetterRules";
 
 function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying,submittedAnswer,setSubmittedAnswer,setHasPlayed}){
@@ -52,18 +53,45 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         let numbers = [...todaysNumbers]
         setTodaysNumbers(numbers)
         setHasReset(true)
+        console.log(hasReset)
     }
 
+    function grabNumber(e){
+        console.log(e.target.value)
+        setHasReset(false)
+    }
+
+    function grabOperand(e){
+        console.log(e.target.value)
+        setHasReset(false)
+    }
+
+
     function spawnNumberTiles(){
+        let counter = 0
         const numTileMap = todaysNumbers.map((givenNumber) => {
+            counter +=1
             if (hasReset === false){
-            return (<NumberTile  number={givenNumber} reset={false}/>)
+            return (<NumberTile  key={counter} number={givenNumber} reset={false} grabNumber={grabNumber}/>)
             }
             else if (hasReset === true){
-                return (<NumberTile number={givenNumber} reset={true}/>)
+                return (<NumberTile key={counter} number={givenNumber} reset={true} grabNumber={grabNumber}/>)
             }
         })
         return numTileMap
+    }
+
+    function spawnOperandTiles(){
+        let operands = ["+","-","*","/"]
+        const operandTileMap = operands.map((givenOperand) => {
+            if (hasReset === false){
+                return (<OperandTile  key={givenOperand} operand={givenOperand} reset={false} grabOperand={grabOperand}/>)
+                }
+                else if (hasReset === true){
+                    return (<OperandTile key={givenOperand} operand={givenOperand} reset={true} grabOperand={grabOperand}/>)
+                }
+        })
+        return operandTileMap
     }
 
 
@@ -84,8 +112,9 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
             <Typography variant="subtitle1">
                 {seconds}
             </Typography>
+            {spawnOperandTiles()}
             {spawnNumberTiles()}
-            </Grid> 
+            </Grid>
           }
           <Grid item xs={12} sx={{ mt: 3, mb: 2 }} align="center"> 
                 <Button variant="contained" color="error" onClick={handleReset}>
