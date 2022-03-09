@@ -8,10 +8,16 @@ import { Button } from "@mui/material";
 import PlayersWord from "./PlayersWord";
 import NumberTile from "./NumberTile";
 import OperandTile from "./OperandTile";
+import NumOptions from "./NumOptions";
+import Operands from "./Operands";
 // import LetterRules from "./LetterRules";
 
 function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying,submittedAnswer,setSubmittedAnswer,setHasPlayed}){
     const [playerSolution,setPlayerSolution] = useState([])
+    const [producedNumbers,setProducedNumbers] = useState([175])
+    const [steps,setSteps] = useState([])
+    const [activeStep,setActiveStep]=useState([])
+
     const [hasReset,setHasReset] = useState(false)
     const [seconds,setSeconds] = useState(30)
 
@@ -40,58 +46,12 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         // handleSubmit()
     }
 
-    function handleSubmittedAnswer(){
-        if(playerSolution.length > 0){
-        setSubmittedAnswer(playerSolution.join(""))
-        console.log(submittedAnswer)
-        handleReset()
-        }
-    }
-
     function handleReset(){
         setPlayerSolution([])
         let numbers = [...todaysNumbers]
         setTodaysNumbers(numbers)
         setHasReset(true)
         console.log(hasReset)
-    }
-
-    function grabNumber(e){
-        console.log(e.target.value)
-        setHasReset(false)
-    }
-
-    function grabOperand(e){
-        console.log(e.target.value)
-        setHasReset(false)
-    }
-
-
-    function spawnNumberTiles(){
-        let counter = 0
-        const numTileMap = todaysNumbers.map((givenNumber) => {
-            counter +=1
-            if (hasReset === false){
-            return (<NumberTile  key={counter} number={givenNumber} reset={false} grabNumber={grabNumber}/>)
-            }
-            else if (hasReset === true){
-                return (<NumberTile key={counter} number={givenNumber} reset={true} grabNumber={grabNumber}/>)
-            }
-        })
-        return numTileMap
-    }
-
-    function spawnOperandTiles(){
-        let operands = ["+","-","*","/"]
-        const operandTileMap = operands.map((givenOperand) => {
-            if (hasReset === false){
-                return (<OperandTile  key={givenOperand} operand={givenOperand} reset={false} grabOperand={grabOperand}/>)
-                }
-                else if (hasReset === true){
-                    return (<OperandTile key={givenOperand} operand={givenOperand} reset={true} grabOperand={grabOperand}/>)
-                }
-        })
-        return operandTileMap
     }
 
 
@@ -112,8 +72,18 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
             <Typography variant="subtitle1">
                 {seconds}
             </Typography>
-            {spawnOperandTiles()}
-            {spawnNumberTiles()}
+            <Typography variant="h6">
+                Target Number:
+            </Typography>
+            <Typography variant="h6">
+                {todaysGame.number_set.target}
+            </Typography>
+            <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+            <Operands />
+            </Grid>
+            <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+            <NumOptions todaysNumbers={todaysNumbers} setTodaysNumbers={setTodaysNumbers} producedNumbers={producedNumbers} />
+            </Grid>
             </Grid>
           }
           <Grid item xs={12} sx={{ mt: 3, mb: 2 }} align="center"> 

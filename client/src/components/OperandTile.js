@@ -16,7 +16,7 @@ function OperandTile({operand, grabOperand,reset}){
         setClicked(true)
         if(e.target.value !== 0){
         console.log(clicked)
-        grabOperand(e)
+        // grabOperand(e)
         setClicked(true)
         console.log(e.target.value)
         }

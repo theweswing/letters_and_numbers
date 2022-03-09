@@ -26,7 +26,7 @@ function LandingNumbers({user}){
           .then((gameData) => {
             let dailyGame = findTodaysGame(gameData)
             setTodaysGame(dailyGame[0])
-            // console.log(dailyGame[0])
+            console.log(dailyGame[0])
             findTodaysSolutions(dailyGame[0])
             // console.log((organizeNumbers(dailyGame[0])))
             setTodaysNumbers(organizeNumbers(dailyGame[0]))

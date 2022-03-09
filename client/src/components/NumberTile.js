@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 
 function NumberTile({number, grabNumber,reset}){
     const [clicked,setClicked]=useState(false)
+    const [used,setUsed] = useState(false)
 
     useEffect(() => {
         if(reset === true){
@@ -16,7 +17,7 @@ function NumberTile({number, grabNumber,reset}){
         setClicked(true)
         if(e.target.value !== 0){
         console.log(clicked)
-        grabNumber(e)
+        // grabNumber(e)
         setClicked(true)
         console.log(e.target.value)
         }
