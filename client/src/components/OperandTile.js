@@ -1,11 +1,11 @@
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-function OperandTile({operand, grabOperand,reset}){
+function OperandTile({operand, grabOperand,hasReset,setHasReset,activeStep}){
     const [clicked,setClicked]=useState(false)
 
     useEffect(() => {
-        if(reset === true){
+        if(hasReset==true || activeStep.length==0){
             setClicked(false)
             
         }
@@ -13,14 +13,17 @@ function OperandTile({operand, grabOperand,reset}){
 
 
     function handleClick(e){
+        if(activeStep.length==1){
         setClicked(true)
+        setHasReset(false)
         if(e.target.value !== 0){
         console.log(clicked)
-        // grabOperand(e)
+        grabOperand(e)
         setClicked(true)
         console.log(e.target.value)
         }
         console.log(clicked)
+    }
     }
 
     if(!clicked){

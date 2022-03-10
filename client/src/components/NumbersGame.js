@@ -11,6 +11,7 @@ import OperandTile from "./OperandTile";
 import NumOptions from "./NumOptions";
 import Operands from "./Operands";
 import CurrentStep from "./CurrentStep";
+import NumSteps from "./NumSteps";
 // import LetterRules from "./LetterRules";
 
 function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying,submittedAnswer,setSubmittedAnswer,setHasPlayed}){
@@ -18,7 +19,6 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
     const [producedNumbers,setProducedNumbers] = useState([])
     const [steps,setSteps] = useState([])
     const [activeStep,setActiveStep]=useState([])
-
     const [hasReset,setHasReset] = useState(false)
     const [seconds,setSeconds] = useState(30)
 
@@ -52,13 +52,76 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         let numbers = [...todaysNumbers]
         setTodaysNumbers(numbers)
         setHasReset(true)
-        console.log(hasReset)
+        setActiveStep([])
+        setProducedNumbers([])
+        setSteps([])
+    }
+
+    function interpretStep(step){
+        console.log(step)
+        let int1 = parseInt(step[0])
+        let int2 = parseInt(step[2])
+        if(step[1] == "+"){
+            let target = int1 + int2
+            return[int1,"+",int2,target]
+
+        }
+        if(step[1] == "-"){
+            let target = int1 - int2
+            if(target > 0){
+                return [int1,"-",int2,target]
+            }
+            else{
+                return false
+            }
+        }
+        if(step[1] == "*"){
+            let target = int1 * int2
+            return [int1,"*",int2,target]
+        }
+        if(step[1] == "/"){
+            let target = int1 / int2
+            if(Number.isInteger(target)){
+                return[int1,"/",int2,target]
+            }
+            else {
+                return false
+            }
+        }
     }
 
     function grabNumber(e){
         if(activeStep.length==0 || activeStep.length==2){
             setActiveStep([...activeStep,e.target.value])
         }
+        if(activeStep.length==2){
+            let finishedStep = [...activeStep,e.target.value]
+            console.log(interpretStep(finishedStep))
+            let tempSteps = [...steps]
+            let interpStep = interpretStep(finishedStep)
+            if(interpStep){
+            tempSteps.push(interpStep)
+            setProducedNumbers([...producedNumbers,interpStep[3]])
+            setSteps(tempSteps)
+            console.log(steps)
+            setActiveStep([])
+            }
+            if(!interpStep){
+                setActiveStep([])
+            }
+    }
+        console.log(activeStep)
+        // if(activeStep.length==3){
+        //     setSteps([...steps,activeStep])
+        //     console.log(steps)
+        // }
+    }
+
+    function grabOperand(e){
+        if(activeStep.length==1){
+            setActiveStep([...activeStep,e.target.value])
+        }
+        console.log(activeStep)
     }
 
 
@@ -86,13 +149,16 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
                 {todaysGame.number_set.target}
             </Typography>
             <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+            <NumSteps steps={steps} setSteps={setSteps} /> 
+            </Grid>
+            <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
             <CurrentStep activeStep={activeStep}/>
             </Grid>
             <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-            <Operands />
+            <Operands activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabOperand={grabOperand}/>
             </Grid>
             <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-            <NumOptions grabNumber={grabNumber} todaysNumbers={todaysNumbers} setTodaysNumbers={setTodaysNumbers} producedNumbers={producedNumbers} />
+            <NumOptions activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} todaysNumbers={todaysNumbers} setTodaysNumbers={setTodaysNumbers} producedNumbers={producedNumbers} />
             </Grid>
             </Grid>
           }

@@ -4,12 +4,12 @@ import NumberTile from "./NumberTile";
 import { Box } from "@mui/system";
 import { Grid } from "@mui/material";
 
-function NumOptions({grabNumber,todaysNumbers,setTodaysNumbers,producedNumbers}){
+function NumOptions({grabNumber,todaysNumbers,setTodaysNumbers,producedNumbers,hasReset,setHasReset,activeStep}){
 
 function spawnNumberTiles(){
     const mapNumberTiles = todaysNumbers.map((givenNumber,index) => {
         return (
-            <NumberTile grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} />
+            <NumberTile activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} />
         )
     })
     return mapNumberTiles
@@ -19,7 +19,7 @@ function spawnProducedTiles(){
     if(producedNumbers.length > 0){
         const mapProducedTiles = producedNumbers.map((givenNumber,index) => {
             return (
-                <NumberTile grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} />
+                <NumberTile activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} />
             )
         })
         return mapProducedTiles

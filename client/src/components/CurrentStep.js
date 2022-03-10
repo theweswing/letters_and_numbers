@@ -12,13 +12,13 @@ function CurrentStep({activeStep}){
         const displaySteps = activeStep.map((item,index) => {
             if(index == 0 || index == 2){
                 return (
-                <Button color="info" variant="contained" disabled="true" size="large">
+                <Button key={`${item} ${index}`} color="info" variant="contained" disabled={true} size="large">
                 {item}
                 </Button>)
             }
             if(index==1){
                 return (
-                    <Button color="info" variant="contained" disabled="true" size="large">
+                    <Button key={`${item} ${index}`} color="info" variant="contained" disabled={true} size="large">
                     {item}
                     </Button>
                 )
@@ -45,13 +45,13 @@ function CurrentStep({activeStep}){
         const displaySteps = tempStep.map((item,index) => {
             if(index == 0 || index == 2){
                 return (
-                <Button color="info" variant="contained" disabled="true" size="large">
+                <Button key={`${item} ${index}`} color="info" variant="contained" disabled={true} size="large">
                 {item}
                 </Button>)
             }
             if(index==1){
                 return (
-                    <Button color="info" variant="contained" disabled="true" size="large">
+                    <Button key={`${item} ${index}`} color="info" variant="contained" disabled={true} size="large">
                     {item}
                     </Button>
                 )
