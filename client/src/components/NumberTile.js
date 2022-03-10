@@ -17,7 +17,7 @@ function NumberTile({number, grabNumber,reset}){
         setClicked(true)
         if(e.target.value !== 0){
         console.log(clicked)
-        // grabNumber(e)
+        grabNumber(e)
         setClicked(true)
         console.log(e.target.value)
         }

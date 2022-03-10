@@ -10,11 +10,12 @@ import NumberTile from "./NumberTile";
 import OperandTile from "./OperandTile";
 import NumOptions from "./NumOptions";
 import Operands from "./Operands";
+import CurrentStep from "./CurrentStep";
 // import LetterRules from "./LetterRules";
 
 function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying,submittedAnswer,setSubmittedAnswer,setHasPlayed}){
     const [playerSolution,setPlayerSolution] = useState([])
-    const [producedNumbers,setProducedNumbers] = useState([175])
+    const [producedNumbers,setProducedNumbers] = useState([])
     const [steps,setSteps] = useState([])
     const [activeStep,setActiveStep]=useState([])
 
@@ -54,6 +55,12 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         console.log(hasReset)
     }
 
+    function grabNumber(e){
+        if(activeStep.length==0 || activeStep.length==2){
+            setActiveStep([...activeStep,e.target.value])
+        }
+    }
+
 
     return (
         <Box
@@ -79,10 +86,13 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
                 {todaysGame.number_set.target}
             </Typography>
             <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+            <CurrentStep activeStep={activeStep}/>
+            </Grid>
+            <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
             <Operands />
             </Grid>
             <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-            <NumOptions todaysNumbers={todaysNumbers} setTodaysNumbers={setTodaysNumbers} producedNumbers={producedNumbers} />
+            <NumOptions grabNumber={grabNumber} todaysNumbers={todaysNumbers} setTodaysNumbers={setTodaysNumbers} producedNumbers={producedNumbers} />
             </Grid>
             </Grid>
           }

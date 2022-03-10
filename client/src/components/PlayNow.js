@@ -62,7 +62,7 @@ function PlayNow({user}){
                 <Button href="/test" size= "medium" variant="contained" endIcon={<AbcIcon/>}>
                     Practice
                 </Button>
-                <Button onClick={(e) => console.log(user)} size="medium" variant="contained" endIcon={<CalculateIcon />}>
+                <Button href="/numbers" size="medium" variant="contained" endIcon={<CalculateIcon />}>
                     Practice
                 </Button>
             </Stack>
