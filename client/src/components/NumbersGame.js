@@ -21,6 +21,8 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
     const [activeStep,setActiveStep]=useState([])
     const [hasReset,setHasReset] = useState(false)
     const [seconds,setSeconds] = useState(30)
+    const [currentAnswer,setCurrentAnswer] = useState("")
+    const [submittedNumber,setSubmittedNumber] = useState("")
 
       useEffect(() => {
         let totalSeconds = 30
@@ -55,6 +57,12 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         setActiveStep([])
         setProducedNumbers([])
         setSteps([])
+        setCurrentAnswer("")
+    }
+
+    function handleSubmit(){
+        setSubmittedNumber(currentAnswer)
+        console.log(submittedAnswer)
     }
 
     function interpretStep(step){
@@ -105,6 +113,7 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
             setSteps(tempSteps)
             console.log(steps)
             setActiveStep([])
+            findHighestNumber(interpStep[3])
             }
             if(!interpStep){
                 setActiveStep([])
@@ -115,6 +124,21 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         //     setSteps([...steps,activeStep])
         //     console.log(steps)
         // }
+    }
+
+    function findHighestNumber(newNum){
+        let target = todaysGame.number_set.target
+        let nums = [...todaysNumbers,producedNumbers]
+        nums.push(newNum)
+        let allNums = nums.flat()
+        console.log(allNums)
+        let closest = 0
+        allNums.forEach((number) => {
+            if(target - closest > target - number){
+                closest=number
+            }
+        })
+        setCurrentAnswer(closest)
     }
 
     function grabOperand(e){
@@ -162,6 +186,18 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
             </Grid>
             </Grid>
           }
+          {submittedNumber && 
+          <Grid item xs={12} sx={{ mt: 3, mb: 2 }} align="center">
+              <Typography variant="subtitle1">
+                 Submission: {submittedNumber}
+             </Typography>
+             </Grid> 
+          }
+          <Grid item xs={12} sx={{ mt: 3, mb: 2 }} align="center"> 
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                    Submit ({currentAnswer})
+                </Button>
+            </Grid>
           <Grid item xs={12} sx={{ mt: 3, mb: 2 }} align="center"> 
                 <Button variant="contained" color="error" onClick={handleReset}>
                     Reset
