@@ -1,15 +1,19 @@
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-function NumberTile({number, grabNumber,hasReset,setHasReset,activeStep}){
+function NumberTile({setUsedNumbers,usedNumbers, number, grabNumber,hasReset,setHasReset,activeStep,used}){
     const [clicked,setClicked]=useState(false)
-    const [used,setUsed] = useState(false)
+    console.log("spawn num tile")
+    console.log(number)
+    console.log(used)
 
     useEffect(() => {
         if(hasReset === true){
             setClicked(false)
             
         }
+        if(used === true)
+            setClicked(true)
     },)
 
 
@@ -24,6 +28,9 @@ function NumberTile({number, grabNumber,hasReset,setHasReset,activeStep}){
         console.log(e.target.value)
         }
         console.log(clicked)
+        let used = [...usedNumbers]
+        used.push(e.target.value)
+        // setUsedNumbers(used)
     }
 }
 

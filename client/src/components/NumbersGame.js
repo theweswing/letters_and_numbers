@@ -23,6 +23,7 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
     const [seconds,setSeconds] = useState(30)
     const [currentAnswer,setCurrentAnswer] = useState("")
     const [submittedNumber,setSubmittedNumber] = useState("")
+    const [usedNumbers,setUsedNumbers] = useState("")
 
       useEffect(() => {
         let totalSeconds = 30
@@ -53,6 +54,7 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         setPlayerSolution([])
         let numbers = [...todaysNumbers]
         setTodaysNumbers(numbers)
+        setUsedNumbers([])
         setHasReset(true)
         setActiveStep([])
         setProducedNumbers([])
@@ -65,18 +67,27 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         console.log(submittedAnswer)
     }
 
+    function addUsedNumbers(int1,int2){
+        let used = [...usedNumbers]
+        used.push(int1)
+        used.push(int2)
+        setUsedNumbers(used)
+    }
+
     function interpretStep(step){
         console.log(step)
         let int1 = parseInt(step[0])
         let int2 = parseInt(step[2])
         if(step[1] == "+"){
             let target = int1 + int2
+            addUsedNumbers(int1,int2)
             return[int1,"+",int2,target]
 
         }
         if(step[1] == "-"){
             let target = int1 - int2
             if(target > 0){
+                addUsedNumbers(int1,int2)
                 return [int1,"-",int2,target]
             }
             else{
@@ -85,11 +96,13 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         }
         if(step[1] == "*"){
             let target = int1 * int2
+            addUsedNumbers(int1,int2)
             return [int1,"*",int2,target]
         }
         if(step[1] == "/"){
             let target = int1 / int2
             if(Number.isInteger(target)){
+                addUsedNumbers(int1,int2)
                 return[int1,"/",int2,target]
             }
             else {
@@ -173,7 +186,7 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
                 {todaysGame.number_set.target}
             </Typography>
             <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-            <NumSteps steps={steps} setSteps={setSteps} /> 
+            <NumSteps usedNumbers={usedNumbers} setUsedNumbers={setUsedNumbers} producedNumbers={producedNumbers} setProducedNumbers={setProducedNumbers} steps={steps} setSteps={setSteps} /> 
             </Grid>
             <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
             <CurrentStep activeStep={activeStep}/>
@@ -182,7 +195,7 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
             <Operands activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabOperand={grabOperand}/>
             </Grid>
             <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-            <NumOptions activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} todaysNumbers={todaysNumbers} setTodaysNumbers={setTodaysNumbers} producedNumbers={producedNumbers} />
+            <NumOptions setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} todaysNumbers={todaysNumbers} setTodaysNumbers={setTodaysNumbers} producedNumbers={producedNumbers} />
             </Grid>
             </Grid>
           }
