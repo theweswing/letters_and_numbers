@@ -5,7 +5,7 @@ import { Box } from "@mui/system";
 import { Grid } from "@mui/material";
 
 function NumOptions({setUsedNumbers, usedNumbers,grabNumber,todaysNumbers,setTodaysNumbers,producedNumbers,hasReset,setHasReset,activeStep}){
-console.log("num option rendering")
+// console.log("num option rendering")
 function spawnNumberTiles(){
     const mapNumberTiles = todaysNumbers.map((givenNumber,index) => {
         return (
@@ -33,6 +33,7 @@ function spawnProducedTiles(){
 function spawnAllTiles(){
     let tracker = {}
     const mapNumberTiles = todaysNumbers.map((givenNumber,index) => {
+        let entry = {num: givenNumber, index: index}
         if(tracker[givenNumber]){
             tracker[givenNumber] +=1
             if(tracker[givenNumber] > howManyTimesUsed(givenNumber)){
@@ -60,7 +61,45 @@ function spawnAllTiles(){
             }
         }
     })
-    return mapNumberTiles
+    const mapProducedTiles = producedNumbers.map((givenNumber,index) => {
+        let entry = {num: givenNumber, index: index}
+        if(tracker[givenNumber]){
+            tracker[givenNumber] +=1
+            if(tracker[givenNumber] > howManyTimesUsed(givenNumber)){
+                return (
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={false}/>
+                )
+            }
+            else {
+                return (
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={true}/>
+                )
+            }
+        }
+        else {
+            tracker[givenNumber]=1
+            if(tracker[givenNumber] > howManyTimesUsed(givenNumber)){
+                return (
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={false}/>
+                )
+            }
+            else {
+                return (
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={true}/>
+                )
+            }
+        }
+    })
+    return (
+        <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+        <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+        {mapProducedTiles}
+        </Grid>
+        <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+        {mapNumberTiles}
+        </Grid>
+        </Grid>
+    )
 }
 
 function howManyTimesUsed(num){
@@ -83,11 +122,11 @@ function howManyTimesUsed(num){
         sx={{ mt: 1 }}
         style={{ justifyContent: "center" }}
         >
-        <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+        {/* <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
         {spawnProducedTiles()}
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-        {spawnNumberTiles()}
+        {spawnAllTiles()}
         </Grid>
         </Box>
     )

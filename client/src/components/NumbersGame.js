@@ -133,10 +133,6 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
             }
     }
         console.log(activeStep)
-        // if(activeStep.length==3){
-        //     setSteps([...steps,activeStep])
-        //     console.log(steps)
-        // }
     }
 
     function findHighestNumber(newNum){

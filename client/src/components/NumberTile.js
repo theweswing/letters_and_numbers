@@ -3,34 +3,38 @@ import React, { useEffect, useState } from "react";
 
 function NumberTile({setUsedNumbers,usedNumbers, number, grabNumber,hasReset,setHasReset,activeStep,used}){
     const [clicked,setClicked]=useState(false)
-    console.log("spawn num tile")
-    console.log(number)
-    console.log(used)
+    // console.log("spawn num tile")
+    // console.log(number)
+    // console.log(used)
 
     useEffect(() => {
         if(hasReset === true){
             setClicked(false)
             
         }
-        if(used === true)
+        if(used === true){
             setClicked(true)
+        }
+        if(used===false){
+            setClicked(false)
+        }
+        // console.log(usedNumbers)
     },)
 
 
     function handleClick(e){
         if(activeStep.length ==0 || activeStep.length == 2){
         setHasReset(false)
-        setClicked(true)
+        // setClicked(true)
         if(e.target.value !== 0){
         console.log(clicked)
         grabNumber(e)
-        setClicked(true)
         console.log(e.target.value)
         }
         console.log(clicked)
         let used = [...usedNumbers]
         used.push(e.target.value)
-        // setUsedNumbers(used)
+        setUsedNumbers(used)
     }
 }
 

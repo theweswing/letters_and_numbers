@@ -34,11 +34,13 @@ function NumSteps({steps,setSteps,producedNumbers,setProducedNumbers,usedNumbers
         let lastStep = steps[steps.length-1]
         console.log(lastStep)
         lastStep.forEach((step) => {
-            let index = reversed.indexOf(step)
-            if (index!== -1){
-                reversed.splice(index,1)
+            console.log(step)
+            let index = reversed.indexOf(String(step))
+            if (index !== -1){
+                let pulled = reversed.splice(index,1)
             }
         })
+        console.log(reversed)
         setUsedNumbers(reversed.reverse())
     }
 
