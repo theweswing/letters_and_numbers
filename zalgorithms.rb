@@ -81,3 +81,35 @@ pp(resrever_niarb_yxalag(%w[S C H I E R E N B E C K]))
 # Counter 3: B <-> K, [0] <-> [3]
 # Counter 2: E <-> C, [1] <-> [2]
 # Counter 1: C <-> E, [2] <-> [1]
+
+class Node
+  @@length = 0
+  @@head = ""
+  @@tail = ""
+  def initialize(data,pointer)
+    @data = data
+    @pointer = pointer
+    @@length += 1
+    @@tail = self
+  end
+
+  # def all(self)
+  #   return @@all
+  # end
+
+  def length(self)
+    return @@length
+  end
+
+  def next
+    return self.pointer
+  end
+
+  def last(self)
+    thing = ""
+    while (self.next)
+      thing=
+    end
+  end
+end
+
