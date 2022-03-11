@@ -43,16 +43,17 @@ function CurrentStep({activeStep}){
             tempStep[2]=activeStep[2]
         }
         const displaySteps = tempStep.map((item,index) => {
+            let num = item.split(",")[0]
             if(index == 0 || index == 2){
                 return (
                 <Button key={`${item} ${index}`} color="info" variant="contained" disabled={true} size="large">
-                {item}
+                {num}
                 </Button>)
             }
             if(index==1){
                 return (
                     <Button key={`${item} ${index}`} color="info" variant="contained" disabled={true} size="large">
-                    {item}
+                    {num}
                     </Button>
                 )
             }

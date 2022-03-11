@@ -7,7 +7,7 @@ import { Typography } from "@mui/material";
 import ReplyIcon from '@mui/icons-material/Reply';
 import { IconButton } from "@mui/material";
 
-function NumSteps({steps,setSteps,producedNumbers,setProducedNumbers,usedNumbers,setUsedNumbers}){
+function NumSteps({todaysGame,todaysNumbers,steps,setSteps,producedNumbers,setProducedNumbers,usedNumbers,setUsedNumbers,setCurrentAnswer}){
 
     function removeStep(){
         let trackSteps = [...steps]
@@ -19,6 +19,23 @@ function NumSteps({steps,setSteps,producedNumbers,setProducedNumbers,usedNumbers
         let trackProduced = [...producedNumbers]
         let lastNumber = trackProduced.pop()
         setProducedNumbers(trackProduced)
+        let target = todaysGame.number_set.target
+        let nums = [...todaysNumbers,trackProduced]
+        let allNums = nums.flat()
+        console.log(allNums)
+        let closest = 0
+        allNums.forEach((number) => {
+            if(number==target){
+                closest=number
+            }
+            else if(number <= target && target - closest > target - number){
+                closest=number
+            }
+            else if(number >= target && target - closest > number - target){
+                closest=number
+            }
+        })
+        setCurrentAnswer(closest)
     }
 
     function handleBackButton(){
@@ -29,19 +46,32 @@ function NumSteps({steps,setSteps,producedNumbers,setProducedNumbers,usedNumbers
 
     function restoreUsedNumbers(){
         let used = [...usedNumbers]
+        console.log("used numbers:")
+        console.log(used)
+        console.log("steps:")
         console.log(steps)
         let reversed = used.reverse()
         let lastStep = steps[steps.length-1]
+        console.log("last step:")
         console.log(lastStep)
         lastStep.forEach((step) => {
             console.log(step)
-            let index = reversed.indexOf(String(step))
+            let index = findUsedNumber(step,reversed)
             if (index !== -1){
                 let pulled = reversed.splice(index,1)
             }
         })
         console.log(reversed)
         setUsedNumbers(reversed.reverse())
+    }
+
+    function findUsedNumber(num,arr){
+        let numsOnly = arr.map((entry) => {
+            let split = entry.split(",")
+            return split[0]
+        })
+        console.log(numsOnly)
+        return numsOnly.indexOf(String(num))
     }
 
     function spawnSteps(){

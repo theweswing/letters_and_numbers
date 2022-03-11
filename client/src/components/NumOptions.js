@@ -33,17 +33,17 @@ function spawnProducedTiles(){
 function spawnAllTiles(){
     let tracker = {}
     const mapNumberTiles = todaysNumbers.map((givenNumber,index) => {
-        let entry = {num: givenNumber, index: index}
+        let entry = `${givenNumber},${index}`
         if(tracker[givenNumber]){
             tracker[givenNumber] +=1
             if(tracker[givenNumber] > howManyTimesUsed(givenNumber)){
                 return (
-                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={false}/>
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={false}/>
                 )
             }
             else {
                 return (
-                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={true}/>
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={true}/>
                 )
             }
         }
@@ -51,28 +51,28 @@ function spawnAllTiles(){
             tracker[givenNumber]=1
             if(tracker[givenNumber] > howManyTimesUsed(givenNumber)){
                 return (
-                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={false}/>
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={false}/>
                 )
             }
             else {
                 return (
-                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={true}/>
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={true}/>
                 )
             }
         }
     })
     const mapProducedTiles = producedNumbers.map((givenNumber,index) => {
-        let entry = {num: givenNumber, index: index}
+        let entry = `${givenNumber},${index}`
         if(tracker[givenNumber]){
             tracker[givenNumber] +=1
             if(tracker[givenNumber] > howManyTimesUsed(givenNumber)){
                 return (
-                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={false}/>
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={false}/>
                 )
             }
             else {
                 return (
-                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={true}/>
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={true}/>
                 )
             }
         }
@@ -80,12 +80,12 @@ function spawnAllTiles(){
             tracker[givenNumber]=1
             if(tracker[givenNumber] > howManyTimesUsed(givenNumber)){
                 return (
-                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={false}/>
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={false}/>
                 )
             }
             else {
                 return (
-                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} value={givenNumber} number={givenNumber} used={true}/>
+                    <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={true}/>
                 )
             }
         }
@@ -100,6 +100,45 @@ function spawnAllTiles(){
         </Grid>
         </Grid>
     )
+}
+
+function newSpawner(){
+    const mapNumberTiles = todaysNumbers.map((givenNumber,index) => {
+        let entry = `${givenNumber},${index},b`
+        if(usedNumbers.includes(entry)){
+            return (
+                <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={true}/>
+            )
+        }
+        else {
+            return (
+                <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={false}/>
+            )
+        }
+})
+    const mapProducedTiles = producedNumbers.map((givenNumber,index) => {
+        let entry = `${givenNumber},${index},p`
+        if(usedNumbers.includes(entry)){
+            return (
+                <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={true}/>
+            )
+        }
+        else {
+            return (
+                <NumberTile setUsedNumbers={setUsedNumbers} usedNumbers={usedNumbers} activeStep={activeStep} setHasReset={setHasReset} hasReset={hasReset} grabNumber={grabNumber} key={`${givenNumber} ${index}`} entry={entry} number={givenNumber} used={false}/>
+            )
+        }
+})
+    return (
+    <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+    <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+    {mapProducedTiles}
+    </Grid>
+    <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
+    {mapNumberTiles}
+    </Grid>
+    </Grid>
+)
 }
 
 function howManyTimesUsed(num){
@@ -126,7 +165,7 @@ function howManyTimesUsed(num){
         {spawnProducedTiles()}
         </Grid> */}
         <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-        {spawnAllTiles()}
+        {newSpawner()}
         </Grid>
         </Box>
     )
