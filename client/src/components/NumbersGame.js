@@ -67,27 +67,29 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         console.log(submittedAnswer)
     }
 
-    function addUsedNumbers(int1,int2){
+    function addUsedNumbers(entry1,entry2){
         let used = [...usedNumbers]
-        used.push(int1)
-        used.push(int2)
+        used.push(entry1)
+        used.push(entry2)
         setUsedNumbers(used)
     }
 
     function interpretStep(step){
         console.log(step)
-        let int1 = parseInt(step[0])
-        let int2 = parseInt(step[2])
+        let int1 = parseInt(step[0].split(",")[0])
+        let int2 = parseInt(step[2].split(",")[0])
+        console.log(int1)
+        console.log(int2)
         if(step[1] == "+"){
             let target = int1 + int2
-            addUsedNumbers(int1,int2)
+            addUsedNumbers(step[0],step[2])
             return[int1,"+",int2,target]
 
         }
         if(step[1] == "-"){
             let target = int1 - int2
             if(target > 0){
-                addUsedNumbers(int1,int2)
+                addUsedNumbers(step[0],step[2])
                 return [int1,"-",int2,target]
             }
             else{
@@ -96,13 +98,13 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         }
         if(step[1] == "*"){
             let target = int1 * int2
-            addUsedNumbers(int1,int2)
+            addUsedNumbers(step[0],step[2])
             return [int1,"*",int2,target]
         }
         if(step[1] == "/"){
             let target = int1 / int2
             if(Number.isInteger(target)){
-                addUsedNumbers(int1,int2)
+                addUsedNumbers(step[0],step[2])
                 return[int1,"/",int2,target]
             }
             else {
@@ -112,12 +114,18 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
     }
 
     function grabNumber(e){
+        let entry = e.target.value.split(",")
+        console.log("entry:")
+        console.log(entry)
+        console.log("usedNumbers:")
+        console.log(usedNumbers)
         if(activeStep.length==0 || activeStep.length==2){
             setActiveStep([...activeStep,e.target.value])
         }
         if(activeStep.length==2){
             let finishedStep = [...activeStep,e.target.value]
-            console.log(interpretStep(finishedStep))
+            console.log("finishedStep:")
+            console.log(finishedStep)
             let tempSteps = [...steps]
             let interpStep = interpretStep(finishedStep)
             if(interpStep){
@@ -143,7 +151,13 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
         console.log(allNums)
         let closest = 0
         allNums.forEach((number) => {
-            if(target - closest > target - number){
+            if(number==target){
+                closest=number
+            }
+            else if(number < target && target - closest > target - number){
+                closest=number
+            }
+            else if(number > target && target - closest > number - target){
                 closest=number
             }
         })
@@ -182,7 +196,7 @@ function NumbersGame({user, todaysGame,todaysNumbers,setTodaysNumbers,setPlaying
                 {todaysGame.number_set.target}
             </Typography>
             <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
-            <NumSteps usedNumbers={usedNumbers} setUsedNumbers={setUsedNumbers} producedNumbers={producedNumbers} setProducedNumbers={setProducedNumbers} steps={steps} setSteps={setSteps} /> 
+            <NumSteps todaysNumbers={todaysNumbers} setCurrentAnswer={setCurrentAnswer} todaysGame={todaysGame} usedNumbers={usedNumbers} setUsedNumbers={setUsedNumbers} producedNumbers={producedNumbers} setProducedNumbers={setProducedNumbers} steps={steps} setSteps={setSteps} /> 
             </Grid>
             <Grid item xs={12} sx={{ mb: 1 }} align="center"> 
             <CurrentStep activeStep={activeStep}/>
