@@ -25,17 +25,23 @@ function NumSteps({todaysGame,todaysNumbers,steps,setSteps,producedNumbers,setPr
         console.log(allNums)
         let closest = 0
         allNums.forEach((number) => {
-            if(number==target){
-                closest=number
-            }
-            else if(number <= target && target - closest > target - number){
-                closest=number
-            }
-            else if(number >= target && target - closest > number - target){
+            if(findDifference(target,number) < findDifference(closest,target)){
                 closest=number
             }
         })
         setCurrentAnswer(closest)
+    }
+
+    function findDifference(int1,int2){
+        if(int1 > int2){
+            return int1 - int2
+        }
+        if(int2 > int1){
+            return int2 - int1
+        }
+        if(int1 == int2){
+            return 0
+        }
     }
 
     function handleBackButton(){
